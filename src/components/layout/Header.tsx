@@ -73,19 +73,10 @@ export function Header({ currentUser, onOpenSearch, onOpenUpgradeModal }: Header
             <div className="absolute right-0 mt-2 w-80 am-glass rounded-2xl p-4 am-gold-border shadow-2xl z-50 text-xs space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-white/10">
                 <span className="font-semibold text-white">Notifications</span>
-                <span className="text-[10px] text-amber-400">2 New</span>
+                <span className="text-[10px] text-gray-400">All caught up</span>
               </div>
-              <div className="space-y-2.5">
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <p className="font-medium text-white">Autonomous Agent Project Published</p>
-                  <p className="text-[11px] text-gray-400">Synthetix Global opened applications for senior AI developers.</p>
-                  <p className="text-[9px] text-gray-500">2 hours ago</p>
-                </div>
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                  <p className="font-medium text-white">Global AI Summit 2026 Registration Open</p>
-                  <p className="text-[11px] text-gray-400">Amsterdam flagship event RSVP is now live for network members.</p>
-                  <p className="text-[9px] text-gray-500">1 day ago</p>
-                </div>
+              <div className="py-4 text-center text-gray-400">
+                <p className="text-[11px]">No unread alerts or announcements.</p>
               </div>
             </div>
           )}

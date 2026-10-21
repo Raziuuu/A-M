@@ -16,21 +16,21 @@ import {
 } from './types';
 import { REGIONAL_PRICING } from './countries';
 
-// Seed Initial Profiles
+// Initial Founder / Owner Profile
 export const INITIAL_PROFILES: Profile[] = [
   {
     id: 'usr_ceo_001',
     email: 'ceo@actionismatter.com',
     full_name: 'Mahammad Razi',
-    username: 'razi_ceo',
+    username: 'razi',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     country_code: 'NL',
     country_name: 'Netherlands',
     city: 'Amsterdam',
     timezone: 'Europe/Amsterdam',
     locale: 'en-US',
-    profession: 'CEO & Founder',
-    bio: 'Founder at Action = Matter. Building an international network where high-caliber ideas turn into real action.',
+    profession: 'Founder & CEO',
+    bio: 'Founder at ACTION = MATTER. Where Ideas Turn Into Action.',
     website: 'https://actionismatter.com',
     linkedin: 'https://linkedin.com',
     role: 'ceo',
@@ -39,380 +39,16 @@ export const INITIAL_PROFILES: Profile[] = [
     cancel_at_period_end: false,
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z'
-  },
-  {
-    id: 'usr_admin_001',
-    email: 'admin@actionismatter.com',
-    full_name: 'Sarah Jenkins',
-    username: 'sjenkins',
-    avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
-    country_code: 'GB',
-    country_name: 'United Kingdom',
-    city: 'London',
-    timezone: 'Europe/London',
-    locale: 'en-GB',
-    profession: 'Operations Director',
-    bio: 'Overseeing global project matching, member approvals, and international operations for Action = Matter.',
-    role: 'admin',
-    membership_status: 'active',
-    membership_tier: 'annual',
-    cancel_at_period_end: false,
-    created_at: '2026-01-10T00:00:00Z',
-    updated_at: '2026-01-10T00:00:00Z'
-  },
-  {
-    id: 'usr_premium_001',
-    email: 'elena@actionismatter.com',
-    full_name: 'Elena Rostova',
-    username: 'erostova',
-    avatar_url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
-    country_code: 'DE',
-    country_name: 'Germany',
-    city: 'Berlin',
-    timezone: 'Europe/Berlin',
-    locale: 'de-DE',
-    profession: 'AI & Computer Vision Engineer',
-    bio: 'Specializing in edge AI deployment, multi-modal perception models, and real-time inference optimization.',
-    website: 'https://elena-ai.dev',
-    linkedin: 'https://linkedin.com/in/elena-rostova',
-    github: 'https://github.com/erostova',
-    role: 'premium_member',
-    membership_status: 'active',
-    membership_tier: 'annual',
-    subscription_period_end: '2027-02-15T00:00:00Z',
-    cancel_at_period_end: false,
-    created_at: '2026-02-01T00:00:00Z',
-    updated_at: '2026-02-01T00:00:00Z'
-  },
-  {
-    id: 'usr_premium_002',
-    email: 'marcus@actionismatter.com',
-    full_name: 'Marcus Vance',
-    username: 'marcusv',
-    avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-    country_code: 'US',
-    country_name: 'United States',
-    city: 'San Francisco',
-    timezone: 'America/Los_Angeles',
-    locale: 'en-US',
-    profession: 'Senior Full-Stack Architect',
-    bio: '10+ years engineering high-load distributed SaaS platforms, Next.js applications, and resilient cloud architectures.',
-    website: 'https://marcusvance.tech',
-    linkedin: 'https://linkedin.com/in/marcusvance',
-    github: 'https://github.com/marcusvance',
-    role: 'premium_member',
-    membership_status: 'active',
-    membership_tier: 'monthly',
-    subscription_period_end: '2026-11-20T00:00:00Z',
-    cancel_at_period_end: false,
-    created_at: '2026-02-10T00:00:00Z',
-    updated_at: '2026-02-10T00:00:00Z'
-  },
-  {
-    id: 'usr_premium_003',
-    email: 'sophia@actionismatter.com',
-    full_name: 'Sophia Chen',
-    username: 'sophiadesign',
-    avatar_url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
-    country_code: 'SG',
-    country_name: 'Singapore',
-    city: 'Singapore',
-    timezone: 'Asia/Singapore',
-    locale: 'en-SG',
-    profession: 'Principal Product Designer',
-    bio: 'Crafting luxury, high-conversion digital experiences, design systems, and accessible interfaces for enterprise scale.',
-    website: 'https://sophiachen.design',
-    linkedin: 'https://linkedin.com/in/sophiachen',
-    role: 'premium_member',
-    membership_status: 'active',
-    membership_tier: 'annual',
-    subscription_period_end: '2027-01-10T00:00:00Z',
-    cancel_at_period_end: false,
-    created_at: '2026-02-15T00:00:00Z',
-    updated_at: '2026-02-15T00:00:00Z'
-  },
-  {
-    id: 'usr_free_001',
-    email: 'free@actionismatter.com',
-    full_name: 'Alex Rivera',
-    username: 'alexrivera',
-    avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-    country_code: 'ES',
-    country_name: 'Spain',
-    city: 'Barcelona',
-    timezone: 'Europe/Madrid',
-    locale: 'es-ES',
-    profession: 'Junior Frontend Developer',
-    bio: 'Aspiring engineer enthusiastic about React, TypeScript, and modern web application development.',
-    role: 'free_user',
-    membership_status: 'inactive',
-    membership_tier: 'free',
-    cancel_at_period_end: false,
-    created_at: '2026-03-01T00:00:00Z',
-    updated_at: '2026-03-01T00:00:00Z'
   }
 ];
 
-// Seed Skill Network Members
-export const INITIAL_SKILL_MEMBERS: SkillNetworkMember[] = [
-  {
-    id: 'snm_001',
-    user_id: 'usr_premium_001',
-    title: 'Staff AI & Machine Learning Specialist',
-    industry: 'Artificial Intelligence & Robotics',
-    experience_years: 8,
-    hourly_rate: 140,
-    currency: 'EUR',
-    availability: 'available',
-    languages: ['English', 'German', 'Russian'],
-    skills: ['Python', 'PyTorch', 'Computer Vision', 'CUDA', 'FastAPI', 'Docker', 'TensorRT'],
-    areas_of_expertise: ['Edge AI Acceleration', 'Vision-Language Models', 'Autonomous Robotics', 'Real-Time Inference'],
-    portfolio_items: [
-      {
-        id: 'port_1',
-        title: 'Autonomous Industrial Vision Inspector',
-        description: 'Sub-millimeter defect detection engine running at 120 FPS on edge hardware.',
-        url: 'https://example.com/project-1',
-        tags: ['PyTorch', 'TensorRT', 'C++']
-      },
-      {
-        id: 'port_2',
-        title: 'Multi-Modal Reasoning Assistant',
-        description: 'Integrated vision and language reasoning model for medical imaging assistance.',
-        url: 'https://example.com/project-2',
-        tags: ['Transformers', 'FastAPI', 'Python']
-      }
-    ],
-    experiences: [
-      {
-        id: 'exp_1',
-        role: 'Lead ML Engineer',
-        company: 'Vanguard Robotics (Berlin)',
-        period: '2023 - Present',
-        description: 'Directed the edge perception team, reducing compute latency by 45%.'
-      }
-    ],
-    certifications: ['NVIDIA Certified Deep Learning Professional', 'AWS Certified Machine Learning - Specialty'],
-    verification_status: 'verified',
-    is_approved: true,
-    is_featured: true,
-    is_active: true,
-    badges: ['Skill Network Member', 'Verified', 'Featured', 'Top Skill', 'Available'],
-    created_at: '2026-02-01T00:00:00Z',
-    updated_at: '2026-02-01T00:00:00Z',
-    profile: INITIAL_PROFILES[2]
-  },
-  {
-    id: 'snm_002',
-    user_id: 'usr_premium_002',
-    title: 'Principal Cloud & Full-Stack Architect',
-    industry: 'Enterprise Software & FinTech',
-    experience_years: 11,
-    hourly_rate: 165,
-    currency: 'USD',
-    availability: 'part_time',
-    languages: ['English', 'Spanish'],
-    skills: ['TypeScript', 'Next.js', 'PostgreSQL', 'Go', 'Kubernetes', 'AWS', 'GraphQL', 'TailwindCSS'],
-    areas_of_expertise: ['Multi-Tenant Systems', 'Distributed Transactions', 'API Performance', 'High Availability'],
-    portfolio_items: [
-      {
-        id: 'port_3',
-        title: 'Real-Time FX Clearinghouse Platform',
-        description: 'Engineered high-frequency settlement gateway handling $40M daily volume.',
-        url: 'https://example.com/fx',
-        tags: ['Go', 'PostgreSQL', 'Kafka']
-      }
-    ],
-    experiences: [
-      {
-        id: 'exp_2',
-        role: 'VP of Technology',
-        company: 'NovaStack Labs (San Francisco)',
-        period: '2022 - 2025',
-        description: 'Led architecture across 14 engineers, scaling microservices to 5M daily requests.'
-      }
-    ],
-    certifications: ['AWS Solutions Architect Professional', 'CKA: Certified Kubernetes Administrator'],
-    verification_status: 'verified',
-    is_approved: true,
-    is_featured: true,
-    is_active: true,
-    badges: ['Skill Network Member', 'Verified', 'Project Contributor'],
-    created_at: '2026-02-10T00:00:00Z',
-    updated_at: '2026-02-10T00:00:00Z',
-    profile: INITIAL_PROFILES[3]
-  },
-  {
-    id: 'snm_003',
-    user_id: 'usr_premium_003',
-    title: 'Lead Product & Design Systems Designer',
-    industry: 'Product Design & Creative Direction',
-    experience_years: 7,
-    hourly_rate: 110,
-    currency: 'USD',
-    availability: 'available',
-    languages: ['English', 'Mandarin'],
-    skills: ['UI/UX Design', 'Design Systems', 'Figma', 'Prototyping', 'User Research', 'Design Tokens'],
-    areas_of_expertise: ['FinTech Design', 'B2B SaaS Workflows', 'Design-to-Code Pipelines', 'Micro-Interactions'],
-    portfolio_items: [
-      {
-        id: 'port_4',
-        title: 'Aura Enterprise Design System',
-        description: 'Comprehensive tokenized UI system powering 18 web and mobile applications.',
-        url: 'https://example.com/aura',
-        tags: ['Figma', 'Tokens', 'Accessibility']
-      }
-    ],
-    experiences: [
-      {
-        id: 'exp_3',
-        role: 'Design Lead',
-        company: 'Vertex Studio (Singapore)',
-        period: '2023 - Present',
-        description: 'Spearheaded human-centered design strategy for global tier-1 banking clients.'
-      }
-    ],
-    certifications: ['Nielsen Norman Group UX Master Certified'],
-    verification_status: 'verified',
-    is_approved: true,
-    is_featured: false,
-    is_active: true,
-    badges: ['Skill Network Member', 'Verified', 'Top Skill', 'Available'],
-    created_at: '2026-02-15T00:00:00Z',
-    updated_at: '2026-02-15T00:00:00Z',
-    profile: INITIAL_PROFILES[4]
-  }
-];
+export const INITIAL_SKILL_MEMBERS: SkillNetworkMember[] = [];
+export const INITIAL_PROJECTS: Project[] = [];
+export const INITIAL_PROJECT_REQUESTS: ProjectRequest[] = [];
+export const INITIAL_PROJECT_INTERESTS: ProjectInterest[] = [];
+export const INITIAL_SUBSCRIPTIONS: Subscription[] = [];
 
-// Seed Projects
-export const INITIAL_PROJECTS: Project[] = [
-  {
-    id: 'proj_001',
-    title: 'Next-Gen Autonomous Agent Orchestration Platform',
-    slug: 'autonomous-agent-orchestration-platform',
-    description: 'We require a senior AI engineer and systems architect to develop a high-throughput multi-agent execution framework. The engine must support deterministic tool calling, state checkpoints, and real-time streaming output across distributed workers.',
-    client_name: 'Synthetix Global',
-    client_company: 'Synthetix AI Labs (Zurich)',
-    category: 'Artificial Intelligence & Systems',
-    required_skills: ['Python', 'PyTorch', 'FastAPI', 'Distributed Systems', 'Docker'],
-    budget_min: 18000,
-    budget_max: 25000,
-    currency: 'EUR',
-    is_budget_public: true,
-    project_type: 'fixed',
-    work_mode: 'remote',
-    country: 'Switzerland',
-    location: 'Zurich / Remote',
-    expected_duration: '3 - 4 months',
-    deadline: '2026-12-15T00:00:00Z',
-    interest_deadline: '2026-11-10T00:00:00Z',
-    people_required: 2,
-    status: 'published',
-    created_by: 'usr_ceo_001',
-    created_at: '2026-03-01T00:00:00Z',
-    updated_at: '2026-03-01T00:00:00Z',
-    interest_count: 4
-  },
-  {
-    id: 'proj_002',
-    title: 'International Multi-Currency B2B Treasury Portal',
-    slug: 'international-multi-currency-treasury-portal',
-    description: 'Action = Matter has been commissioned by an international trade consortium to build a secure, real-time treasury management dashboard. Key milestones include automated reconciliation, localized bank integrations, and ISO 20022 compliance.',
-    client_name: 'Atlas Capital Group',
-    client_company: 'Atlas Capital Partners (London)',
-    category: 'FinTech & Web Architecture',
-    required_skills: ['TypeScript', 'Next.js', 'PostgreSQL', 'Security Auditing', 'TailwindCSS'],
-    budget_min: 22000,
-    budget_max: 30000,
-    currency: 'USD',
-    is_budget_public: true,
-    project_type: 'fixed',
-    work_mode: 'remote',
-    country: 'United Kingdom',
-    location: 'London / Remote',
-    expected_duration: '4 months',
-    deadline: '2027-01-20T00:00:00Z',
-    interest_deadline: '2026-11-15T00:00:00Z',
-    people_required: 3,
-    status: 'published',
-    created_by: 'usr_ceo_001',
-    created_at: '2026-03-05T00:00:00Z',
-    updated_at: '2026-03-05T00:00:00Z',
-    interest_count: 6
-  },
-  {
-    id: 'proj_003',
-    title: 'Cross-Platform Medical Diagnostics Telemetry Suite',
-    slug: 'cross-platform-medical-telemetry-suite',
-    description: 'Designing and deploying an intuitive clinical telemetry monitoring suite for hospitals in Western Europe. Needs rock-solid UX for clinicians and sub-second signal processing for high-risk monitoring equipment.',
-    client_name: 'MedBio European Consortium',
-    client_company: 'MedBio Systems (Amsterdam)',
-    category: 'Healthcare & UI/UX',
-    required_skills: ['UI/UX Design', 'Design Systems', 'TypeScript', 'WebSockets'],
-    budget_min: 14000,
-    budget_max: 19000,
-    currency: 'EUR',
-    is_budget_public: true,
-    project_type: 'fixed',
-    work_mode: 'hybrid',
-    country: 'Netherlands',
-    location: 'Amsterdam',
-    expected_duration: '2 - 3 months',
-    deadline: '2026-12-30T00:00:00Z',
-    interest_deadline: '2026-11-05T00:00:00Z',
-    people_required: 2,
-    status: 'published',
-    created_by: 'usr_ceo_001',
-    created_at: '2026-03-10T00:00:00Z',
-    updated_at: '2026-03-10T00:00:00Z',
-    interest_count: 2
-  }
-];
-
-// Seed Project Requests
-export const INITIAL_PROJECT_REQUESTS: ProjectRequest[] = [
-  {
-    id: 'preq_001',
-    client_name: 'Henrik Lindqvist',
-    client_email: 'henrik@nordiclogistics.se',
-    client_company: 'Nordic Logistics AB',
-    country: 'Sweden',
-    title: 'Automated Fleet Telemetry & Predictive Routing Engine',
-    description: 'We operate 450 freight carriers across Scandinavia. We seek Action = Matter to architect a real-time dispatch and carbon-optimized route calculation engine.',
-    required_skills: ['Go', 'Python', 'GIS / Map APIs', 'Cloud Architecture'],
-    budget_range: '€30,000 - €50,000',
-    currency: 'EUR',
-    timeline: 'Within 60 days',
-    work_mode: 'remote',
-    additional_requirements: 'Must comply with EU transport data regulations.',
-    status: 'pending_review',
-    created_at: '2026-03-12T10:00:00Z',
-    updated_at: '2026-03-12T10:00:00Z'
-  }
-];
-
-// Seed Project Interests
-export const INITIAL_PROJECT_INTERESTS: ProjectInterest[] = [
-  {
-    id: 'pint_001',
-    project_id: 'proj_001',
-    user_id: 'usr_premium_001',
-    status: 'shortlisted',
-    message: 'I have developed distributed multi-agent inference pipelines at Vanguard Robotics and can immediately take ownership of the deterministic tool-calling engine.',
-    agreed_compensation: 12500,
-    currency: 'EUR',
-    payment_status: 'pending',
-    admin_notes: 'Exceptional background in PyTorch and CUDA; top candidate for lead engineer role.',
-    reviewed_by: 'usr_ceo_001',
-    reviewed_at: '2026-03-04T12:00:00Z',
-    submitted_at: '2026-03-02T15:30:00Z',
-    updated_at: '2026-03-04T12:00:00Z',
-    profile: INITIAL_PROFILES[2],
-    project: INITIAL_PROJECTS[0]
-  }
-];
-
-// Seed Coupons
+// System Coupons for Checkout Discounts
 export const INITIAL_COUPONS: Coupon[] = [
   {
     id: 'coup_001',
@@ -420,7 +56,7 @@ export const INITIAL_COUPONS: Coupon[] = [
     discount_type: 'percentage',
     discount_value: 50,
     max_uses: 500,
-    current_uses: 48,
+    current_uses: 0,
     max_uses_per_user: 1,
     applicable_plans: ['monthly', 'annual'],
     starts_at: '2026-01-01T00:00:00Z',
@@ -433,133 +69,19 @@ export const INITIAL_COUPONS: Coupon[] = [
     discount_type: 'percentage',
     discount_value: 20,
     max_uses: 1000,
-    current_uses: 124,
+    current_uses: 0,
     max_uses_per_user: 1,
     applicable_plans: ['monthly', 'annual'],
     starts_at: '2026-01-01T00:00:00Z',
     is_active: true,
     created_at: '2026-01-01T00:00:00Z'
-  },
-  {
-    id: 'coup_003',
-    code: 'ANNUAL10',
-    discount_type: 'percentage',
-    discount_value: 10,
-    max_uses: 200,
-    current_uses: 19,
-    max_uses_per_user: 1,
-    applicable_plans: ['annual'],
-    starts_at: '2026-01-01T00:00:00Z',
-    is_active: true,
-    created_at: '2026-01-01T00:00:00Z'
   }
 ];
 
-// Seed Invoices
-export const INITIAL_INVOICES: Invoice[] = [
-  {
-    id: 'inv_001',
-    invoice_number: 'INV-2026-849201',
-    user_id: 'usr_premium_001',
-    plan_name: 'Skill Network Annual Membership',
-    billing_period: 'Feb 15, 2026 - Feb 15, 2027',
-    amount: 90,
-    discount_amount: 18,
-    tax_amount: 0,
-    total_amount: 72,
-    currency: 'EUR',
-    payment_provider: 'stripe',
-    provider_transaction_id: 'ch_stripe_8349285',
-    payment_status: 'paid',
-    billing_name: 'Elena Rostova',
-    billing_email: 'elena@actionismatter.com',
-    billing_country: 'Germany',
-    billing_address: 'Friedrichstraße 44, 10117 Berlin',
-    paid_at: '2026-02-15T14:30:00Z',
-    created_at: '2026-02-15T14:30:00Z'
-  },
-  {
-    id: 'inv_002',
-    invoice_number: 'INV-2026-928172',
-    user_id: 'usr_premium_002',
-    plan_name: 'Skill Network Monthly Membership',
-    billing_period: 'Oct 20, 2026 - Nov 20, 2026',
-    amount: 10,
-    discount_amount: 0,
-    tax_amount: 0,
-    total_amount: 10,
-    currency: 'USD',
-    payment_provider: 'stripe',
-    provider_transaction_id: 'ch_stripe_1928472',
-    payment_status: 'paid',
-    billing_name: 'Marcus Vance',
-    billing_email: 'marcus@actionismatter.com',
-    billing_country: 'United States',
-    billing_address: '450 Mission St, San Francisco, CA 94105',
-    paid_at: '2026-10-20T11:00:00Z',
-    created_at: '2026-10-20T11:00:00Z'
-  }
-];
+export const INITIAL_INVOICES: Invoice[] = [];
+export const INITIAL_EVENTS: Event[] = [];
 
-// Seed Events (Events & Hubs - Visual specification: Upcoming Events, City Hubs, Past Events, My Events)
-export const INITIAL_EVENTS: Event[] = [
-  {
-    id: 'evt_001',
-    title: 'Global AI & Real-World Engineering Summit 2026',
-    description: 'An exclusive international summit bringing together top machine learning architects, enterprise founders, and elite Skill Network contributors to explore practical autonomous agents.',
-    event_type: 'Conference',
-    date: '2026-11-18',
-    start_time: '14:00',
-    end_time: '18:30',
-    timezone: 'Europe/Amsterdam',
-    location: 'Akerkhof 22, Amsterdam & Virtual Stream',
-    is_online: false,
-    host: 'Action = Matter Executive Team',
-    capacity: 250,
-    topics: ['Artificial Intelligence', 'Agent Systems', 'Distributed Scale'],
-    attendees_count: 184,
-    image_url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80',
-    status: 'upcoming'
-  },
-  {
-    id: 'evt_002',
-    title: 'Founders & Builders Roundtable: Turning Ideas into Execution',
-    description: 'Interactive session exploring how venture builders and international specialists align on deliverables, project scopes, and project compensation.',
-    event_type: 'Workshop',
-    date: '2026-11-25',
-    start_time: '17:00',
-    end_time: '19:00',
-    timezone: 'Europe/London',
-    location: 'Online Live Masterclass',
-    is_online: true,
-    host: 'Mahammad Razi (CEO)',
-    capacity: 100,
-    topics: ['Entrepreneurship', 'Project Scoping', 'Skill Network'],
-    attendees_count: 82,
-    image_url: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=800&q=80',
-    status: 'upcoming'
-  },
-  {
-    id: 'evt_003',
-    title: 'High-Performance Web & Real-Time Financial Protocols',
-    description: 'Deep dive into zero-downtime architecture, resilient payment webhooks, and sub-millisecond data pipes.',
-    event_type: 'Webinar',
-    date: '2026-10-05',
-    start_time: '15:00',
-    end_time: '17:00',
-    timezone: 'UTC',
-    location: 'Virtual Archive Available',
-    is_online: true,
-    host: 'Marcus Vance & Guests',
-    capacity: 300,
-    topics: ['Next.js', 'FinTech', 'WebSockets'],
-    attendees_count: 240,
-    image_url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
-    status: 'past'
-  }
-];
-
-// Seed Hubs (City Hubs & Industry Hubs)
+// Official Action = Matter Regional Chapters
 export const INITIAL_HUBS: Hub[] = [
   {
     id: 'hub_ams',
@@ -568,129 +90,52 @@ export const INITIAL_HUBS: Hub[] = [
     type: 'city',
     city: 'Amsterdam',
     country: 'Netherlands',
-    description: 'The primary European headquarters hub connecting Netherlands-based engineers, tech leads, and venture innovators.',
+    description: 'European headquarters hub connecting Netherlands-based engineers, tech leads, and venture innovators.',
     icon: 'Building2',
-    member_count: 320,
-    is_member: true
-  },
-  {
-    id: 'hub_utr',
-    name: 'Utrecht City Hub',
-    slug: 'utrecht',
-    type: 'city',
-    city: 'Utrecht',
-    country: 'Netherlands',
-    description: 'A thriving community of Dutch researchers, health-tech engineers, and software specialists.',
-    icon: 'MapPin',
-    member_count: 145,
+    member_count: 0,
     is_member: false
   },
   {
-    id: 'hub_rot',
-    name: 'Rotterdam City Hub',
-    slug: 'rotterdam',
+    id: 'hub_lon',
+    name: 'London City Hub',
+    slug: 'london',
     type: 'city',
-    city: 'Rotterdam',
-    country: 'Netherlands',
-    description: 'Focusing on maritime logistics technology, industrial engineering, and sustainability platforms.',
-    icon: 'Anchor',
-    member_count: 118,
+    city: 'London',
+    country: 'United Kingdom',
+    description: 'Connecting financial technology architects, quantitative developers, and systems specialists.',
+    icon: 'Building',
+    member_count: 0,
     is_member: false
   },
   {
-    id: 'hub_ai',
-    name: 'Artificial Intelligence & Robotics Hub',
-    slug: 'ai-robotics',
-    type: 'industry',
-    description: 'Specialists building autonomous systems, deep learning models, LLM agents, and vision pipelines.',
+    id: 'hub_nyc',
+    name: 'New York City Hub',
+    slug: 'new-york',
+    type: 'city',
+    city: 'New York',
+    country: 'United States',
+    description: 'Connecting North American engineering leaders, venture founders, and autonomous systems builders.',
+    icon: 'Compass',
+    member_count: 0,
+    is_member: false
+  },
+  {
+    id: 'hub_blr',
+    name: 'Bengaluru Tech Hub',
+    slug: 'bengaluru',
+    type: 'city',
+    city: 'Bengaluru',
+    country: 'India',
+    description: 'Premier technology and engineering community for elite full-stack and cloud architects.',
     icon: 'Cpu',
-    member_count: 512,
-    is_member: true
-  },
-  {
-    id: 'hub_tech',
-    name: 'Distributed Systems & Cloud Hub',
-    slug: 'cloud-systems',
-    type: 'industry',
-    description: 'Architects of high-throughput databases, microservices, container orchestration, and multi-cloud resilience.',
-    icon: 'Server',
-    member_count: 420,
+    member_count: 0,
     is_member: false
   }
 ];
 
-// Seed Messages
-export const INITIAL_MESSAGES: Message[] = [
-  {
-    id: 'msg_001',
-    thread_id: 'th_001',
-    sender_id: 'usr_ceo_001',
-    recipient_id: 'usr_premium_001',
-    content: 'Hi Elena, we reviewed your profile for the Autonomous Agent Orchestration project. Your PyTorch and TensorRT track record aligns directly with what Synthetix needs. Can you share your current availability?',
-    is_read: true,
-    read_at: '2026-03-03T10:00:00Z',
-    created_at: '2026-03-03T09:45:00Z'
-  },
-  {
-    id: 'msg_002',
-    thread_id: 'th_001',
-    sender_id: 'usr_premium_001',
-    recipient_id: 'usr_ceo_001',
-    content: 'Hello Razi, thank you! Yes, I am currently available for 30-35 hours/week and can begin sprint zero as early as next Monday. Looking forward to reviewing the technical specifications.',
-    is_read: true,
-    read_at: '2026-03-03T10:15:00Z',
-    created_at: '2026-03-03T10:10:00Z'
-  }
-];
-
-export const INITIAL_THREADS: MessageThread[] = [
-  {
-    id: 'th_001',
-    participant_ids: ['usr_ceo_001', 'usr_premium_001'],
-    last_message_at: '2026-03-03T10:10:00Z',
-    created_at: '2026-03-03T09:45:00Z',
-    last_message: INITIAL_MESSAGES[1],
-    other_participant: INITIAL_PROFILES[0],
-    unread_count: 0
-  }
-];
-
-// Seed Audit Logs
-export const INITIAL_AUDIT_LOGS: AuditLog[] = [
-  {
-    id: 'aud_001',
-    actor_id: 'usr_ceo_001',
-    actor_name: 'Mahammad Razi (CEO)',
-    action: 'MEMBER_APPROVED',
-    entity: 'skill_network_members',
-    entity_id: 'snm_001',
-    metadata: { member: 'Elena Rostova', badge: 'Verified Top Skill' },
-    ip_address: '82.161.42.10',
-    created_at: '2026-02-01T10:00:00Z'
-  },
-  {
-    id: 'aud_002',
-    actor_id: 'usr_ceo_001',
-    actor_name: 'Mahammad Razi (CEO)',
-    action: 'PROJECT_PUBLISHED',
-    entity: 'projects',
-    entity_id: 'proj_001',
-    metadata: { title: 'Autonomous Agent Orchestration Platform', budget: '€25,000' },
-    ip_address: '82.161.42.10',
-    created_at: '2026-03-01T11:00:00Z'
-  },
-  {
-    id: 'aud_003',
-    actor_id: 'usr_admin_001',
-    actor_name: 'Sarah Jenkins (Admin)',
-    action: 'COUPON_CREATED',
-    entity: 'coupons',
-    entity_id: 'coup_001',
-    metadata: { code: 'ACTION50', discount: '50%' },
-    ip_address: '185.86.151.20',
-    created_at: '2026-01-01T09:00:00Z'
-  }
-];
+export const INITIAL_MESSAGES: Message[] = [];
+export const INITIAL_THREADS: MessageThread[] = [];
+export const INITIAL_AUDIT_LOGS: AuditLog[] = [];
 
 // IN-MEMORY / LOCAL STORAGE STATE CONTROLLER
 class PlatformStore {
@@ -708,7 +153,7 @@ class PlatformStore {
   private auditLogs: AuditLog[] = [...INITIAL_AUDIT_LOGS];
 
   // Active user session simulation (defaulting to Elena - Premium, but switchable on demand to Free or CEO)
-  private currentUserId: string = 'usr_premium_001';
+  private currentUserId: string = 'usr_ceo_001';
 
   getCurrentUser(): Profile {
     return this.profiles.find(p => p.id === this.currentUserId) || this.profiles[0];

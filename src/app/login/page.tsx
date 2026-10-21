@@ -126,39 +126,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Logins */}
-          <div className="pt-4 border-t border-white/10 space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 block text-center">
-              Quick Test Credentials
-            </span>
-            <div className="grid grid-cols-3 gap-2 text-[10px]">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('elena@actionismatter.com')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-amber-400/10 text-gray-300 hover:text-amber-300 border border-white/5 transition-colors text-center"
-              >
-                <span className="font-bold block">Elena</span>
-                <span className="text-gray-500">Premium</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('free@actionismatter.com')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-amber-400/10 text-gray-300 hover:text-amber-300 border border-white/5 transition-colors text-center"
-              >
-                <span className="font-bold block">Alex</span>
-                <span className="text-gray-500">Free User</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('ceo@actionismatter.com')}
-                className="p-2 rounded-lg bg-white/5 hover:bg-amber-400/10 text-gray-300 hover:text-amber-300 border border-white/5 transition-colors text-center"
-              >
-                <span className="font-bold block">Razi</span>
-                <span className="text-gray-500">CEO / Admin</span>
-              </button>
-            </div>
-          </div>
-
           <div className="text-center text-xs text-gray-400">
             Don't have an account yet?{' '}
             <Link href="/signup" className="text-amber-400 font-bold hover:text-amber-300">
