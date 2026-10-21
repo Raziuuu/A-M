@@ -22,20 +22,29 @@ import {
   ChevronRight,
   Receipt,
   Tag,
-  ClipboardList
+  ClipboardList,
+  X
 } from 'lucide-react';
 import { Profile } from '@/lib/types';
 
 interface SidebarProps {
   currentUser: Profile | null;
   onOpenUpgradeModal: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
+export function Sidebar({ currentUser, onOpenUpgradeModal, isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname();
 
   const isFree = currentUser?.role === 'free_user' && currentUser.membership_status !== 'active';
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'ceo';
+
+  const handleLinkClick = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
 
   const navItems = [
     { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, premiumOnly: false },
@@ -64,24 +73,51 @@ export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
   ];
 
   return (
-    <aside className="w-64 shrink-0 bg-[#080b10] border-r border-white/10 flex flex-col justify-between h-screen sticky top-0 overflow-y-auto">
-      {/* Top Branding */}
-      <div>
-        <div className="h-20 px-6 flex items-center border-b border-white/10">
-          <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-xl am-gold-gradient flex items-center justify-center font-black text-black text-sm tracking-tighter shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-              AM
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-sm tracking-wider text-white">
-                ACTION <span className="text-amber-400">=</span> MATTER
-              </span>
-              <span className="text-[9px] text-gray-400 uppercase tracking-widest">
-                Skill Network
-              </span>
-            </div>
-          </Link>
-        </div>
+    <>
+      {/* Mobile Backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 md:hidden transition-opacity"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-[#080b10] border-r border-white/10 flex flex-col justify-between h-full transform transition-transform duration-300 ease-in-out md:static md:w-64 md:h-screen md:shrink-0 md:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        } overflow-y-auto`}
+      >
+        {/* Top Branding */}
+        <div>
+          <div className="h-16 sm:h-20 px-4 sm:px-6 flex items-center justify-between border-b border-white/10">
+            <Link href="/dashboard" onClick={handleLinkClick} className="flex items-center gap-3 group">
+              <div className="w-9 h-9 rounded-xl am-gold-gradient flex items-center justify-center font-black text-black text-sm tracking-tighter shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+                AM
+              </div>
+              <div className="flex flex-col">
+                <span className="font-extrabold text-sm tracking-wider text-white">
+                  ACTION <span className="text-amber-400">=</span> MATTER
+                </span>
+                <span className="text-[9px] text-gray-400 uppercase tracking-widest">
+                  Skill Network
+                </span>
+              </div>
+            </Link>
+
+            {/* Mobile Close Button */}
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="md:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                aria-label="Close sidebar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
 
         {/* Upgrade Banner for Free Users */}
         {isFree && (
@@ -135,7 +171,8 @@ export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                onClick={handleLinkClick}
+                className={`flex items-center justify-between px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-amber-400/15 text-amber-300 border border-amber-400/30 font-semibold'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -172,7 +209,8 @@ export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                  onClick={handleLinkClick}
+                  className={`flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-all ${
                     isActive
                       ? 'bg-purple-500/20 text-purple-200 border border-purple-500/40'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -191,7 +229,8 @@ export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
       <div className="p-3 border-t border-white/10 space-y-1 bg-black/30">
         <Link
           href="/dashboard/billing"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+          onClick={handleLinkClick}
+          className={`flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-colors ${
             pathname === '/dashboard/billing' ? 'text-amber-300 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
         >
@@ -201,7 +240,8 @@ export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
 
         <Link
           href="/dashboard/settings"
-          className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+          onClick={handleLinkClick}
+          className={`flex items-center gap-3 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-medium transition-colors ${
             pathname === '/dashboard/settings' ? 'text-amber-300 bg-white/5' : 'text-gray-400 hover:text-white hover:bg-white/5'
           }`}
         >
@@ -233,5 +273,6 @@ export function Sidebar({ currentUser, onOpenUpgradeModal }: SidebarProps) {
         </div>
       </div>
     </aside>
+    </>
   );
 }

@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [currentUser, setCurrentUser] = useState<Profile | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -23,22 +24,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#05070a] text-white flex">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-[#05070a] text-white flex overflow-x-hidden">
+      {/* Responsive Sidebar (Persistent on Desktop, Slide-over Drawer on Mobile) */}
       <Sidebar
         currentUser={currentUser}
+        isOpen={mobileSidebarOpen}
+        onClose={() => setMobileSidebarOpen(false)}
         onOpenUpgradeModal={() => setUpgradeOpen(true)}
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen overflow-x-hidden">
         <Header
           currentUser={currentUser}
+          onToggleMobileSidebar={() => setMobileSidebarOpen(prev => !prev)}
           onOpenSearch={() => setSearchOpen(true)}
           onOpenUpgradeModal={() => setUpgradeOpen(true)}
         />
 
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto overflow-x-hidden w-full max-w-full">
           {children}
         </main>
       </div>

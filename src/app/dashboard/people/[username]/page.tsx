@@ -72,17 +72,17 @@ export default function MemberProfilePage() {
       {/* Main Profile Header Card */}
       <div className="am-card p-6 md:p-8 am-gold-border space-y-6">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-start gap-5">
-            <div className="w-24 h-24 rounded-2xl overflow-hidden bg-white/10 border-2 border-amber-400/30 shrink-0 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-white/10 border-2 border-amber-400/30 shrink-0 shadow-xl">
               <img
                 src={member.profile?.avatar_url}
                 alt={member.profile?.full_name}
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white break-words">
                   {member.profile?.full_name}
                 </h1>
                 {member.verification_status === 'verified' && (
@@ -92,9 +92,9 @@ export default function MemberProfilePage() {
                 )}
               </div>
               <p className="text-sm font-semibold text-amber-200/90">{member.title}</p>
-              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-gray-400">
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-gray-500" />
+                  <MapPin className="w-3.5 h-3.5 text-gray-500 shrink-0" />
                   {member.profile?.city ? `${member.profile.city}, ` : ''}{member.profile?.country_name}
                 </span>
                 <span>•</span>
@@ -106,18 +106,18 @@ export default function MemberProfilePage() {
           </div>
 
           {/* Direct CTA */}
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3 pt-2 md:pt-0 border-t md:border-t-0 border-white/10">
             {isFree ? (
               <button
                 onClick={() => setUpgradeModalOpen(true)}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-md"
+                className="w-full sm:w-auto min-h-[44px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-md active:scale-95 transition-all"
               >
                 <Lock className="w-3.5 h-3.5" /> Message Member
               </button>
             ) : (
               <Link
                 href={`/dashboard/messages?to=${member.user_id}`}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-md"
+                className="w-full sm:w-auto min-h-[44px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-md active:scale-95 transition-all"
               >
                 <MessageSquare className="w-3.5 h-3.5" /> Send Message
               </Link>

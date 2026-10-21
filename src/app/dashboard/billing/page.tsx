@@ -158,8 +158,8 @@ export default function BillingPage() {
           <span className="text-[11px] text-gray-500">All payments generate verifiable VAT invoices</span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[560px] text-left text-xs">
             <thead className="text-[10px] uppercase font-bold text-gray-400 border-b border-white/10">
               <tr>
                 <th className="py-3 px-2">Invoice #</th>
@@ -174,9 +174,9 @@ export default function BillingPage() {
               {invoices.map((inv) => (
                 <tr key={inv.id} className="hover:bg-white/5 transition-colors">
                   <td className="py-3.5 px-2 font-mono font-medium text-amber-300">{inv.invoice_number}</td>
-                  <td className="py-3.5 px-2 text-gray-400">{new Date(inv.paid_at).toLocaleDateString()}</td>
+                  <td className="py-3.5 px-2 text-gray-400 whitespace-nowrap">{new Date(inv.paid_at).toLocaleDateString()}</td>
                   <td className="py-3.5 px-2 text-white font-medium">{inv.plan_name}</td>
-                  <td className="py-3.5 px-2 font-bold text-white">
+                  <td className="py-3.5 px-2 font-bold text-white whitespace-nowrap">
                     {formatPrice(inv.total_amount, inv.currency as SupportedCurrency)}
                   </td>
                   <td className="py-3.5 px-2">
@@ -187,7 +187,7 @@ export default function BillingPage() {
                   <td className="py-3.5 px-2 text-right">
                     <Link
                       href={`/dashboard/invoices/${inv.id}`}
-                      className="text-amber-400 hover:text-amber-300 font-semibold inline-flex items-center gap-1"
+                      className="text-amber-400 hover:text-amber-300 font-semibold inline-flex items-center gap-1 min-h-[44px] px-2 py-1"
                     >
                       View Invoice <ExternalLink className="w-3 h-3" />
                     </Link>

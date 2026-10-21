@@ -10,6 +10,7 @@ import {
   Sparkles,
   Lock,
   ArrowRight,
+  ArrowLeft,
   User
 } from 'lucide-react';
 import { platformStore } from '@/lib/store';
@@ -24,6 +25,7 @@ export default function MessagesPage() {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [mobileView, setMobileView] = useState<'threads' | 'chat'>('threads');
 
   const loadData = () => {
     fetch('/api/auth/me')
@@ -116,9 +118,9 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto h-[calc(100vh-10rem)] am-card am-gold-border overflow-hidden flex flex-col md:flex-row">
+    <div className="max-w-6xl mx-auto h-[calc(100vh-8rem)] sm:h-[calc(100vh-10rem)] am-card am-gold-border overflow-hidden flex flex-col md:flex-row">
       {/* Threads Sidebar */}
-      <div className="w-full md:w-80 border-r border-white/10 flex flex-col bg-black/40">
+      <div className={`w-full md:w-80 border-r border-white/10 flex flex-col bg-black/40 ${mobileView === 'chat' ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-4 border-b border-white/10">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-amber-400" /> Conversations
@@ -134,9 +136,12 @@ export default function MessagesPage() {
             return (
               <button
                 key={thread.id}
-                onClick={() => setActiveThread(thread)}
-                className={`w-full p-4 flex items-center gap-3.5 text-left transition-colors ${
-                  isSelected ? 'bg-amber-400/10 border-l-2 border-amber-400' : 'hover:bg-white/5'
+                onClick={() => {
+                  setActiveThread(thread);
+                  setMobileView('chat');
+                }}
+                className={`w-full p-4 min-h-[56px] flex items-center gap-3.5 text-left transition-colors ${
+                  isSelected ? 'bg-amber-400/10 border-l-2 border-amber-400' : 'hover:bg-white/5 active:bg-white/10'
                 }`}
               >
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-white/10 border border-amber-400/20 shrink-0">
@@ -164,7 +169,7 @@ export default function MessagesPage() {
       </div>
 
       {/* Chat Window */}
-      <div className="flex-1 flex flex-col justify-between bg-[#080b10]">
+      <div className={`flex-1 flex flex-col justify-between bg-[#080b10] ${mobileView === 'threads' ? 'hidden md:flex' : 'flex'}`}>
         {activeThread ? (
           <>
             {/* Chat Header */}
@@ -173,18 +178,26 @@ export default function MessagesPage() {
               const otherUser = platformStore.getProfileById(otherUserId || '');
 
               return (
-                <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/20">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full overflow-hidden bg-white/10 border border-amber-400/30">
+                <div className="p-3 sm:p-4 border-b border-white/10 flex items-center justify-between bg-black/20 gap-2">
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => setMobileView('threads')}
+                      className="md:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10"
+                      aria-label="Back to conversations"
+                    >
+                      <ArrowLeft className="w-5 h-5 text-amber-400" />
+                    </button>
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden bg-white/10 border border-amber-400/30 shrink-0">
                       <img src={otherUser?.avatar_url} alt="" className="w-full h-full object-cover" />
                     </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-white">{otherUser?.full_name}</h3>
-                      <p className="text-[10px] text-amber-300 font-medium capitalize">{otherUser?.role.replace('_', ' ')}</p>
+                    <div className="min-w-0">
+                      <h3 className="text-xs font-bold text-white truncate">{otherUser?.full_name}</h3>
+                      <p className="text-[10px] text-amber-300 font-medium capitalize truncate">{otherUser?.role.replace('_', ' ')}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">
-                    Realtime Connected
+                  <span className="text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold shrink-0">
+                    Connected
                   </span>
                 </div>
               );
@@ -201,7 +214,7 @@ export default function MessagesPage() {
                     className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}
                   >
                     <div
-                      className={`max-w-md px-4 py-2.5 rounded-2xl text-xs leading-relaxed ${
+                      className={`max-w-[85%] sm:max-w-md px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed break-words ${
                         isMine
                           ? 'am-gold-gradient text-black font-medium rounded-br-xs shadow-md'
                           : 'bg-white/10 text-white rounded-bl-xs border border-white/10'
@@ -218,18 +231,19 @@ export default function MessagesPage() {
             </div>
 
             {/* Input Composer */}
-            <form onSubmit={handleSendMessage} className="p-3 border-t border-white/10 bg-black/40 flex items-center gap-2">
+            <form onSubmit={handleSendMessage} className="p-2.5 sm:p-3 border-t border-white/10 bg-black/40 flex items-center gap-2">
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Write your message..."
-                className="flex-1 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50"
+                className="flex-1 min-h-[44px] px-3.5 sm:px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50"
               />
               <button
                 type="submit"
                 disabled={loading || !newMessage.trim()}
-                className="p-2.5 rounded-xl am-btn-primary disabled:opacity-50 transition-all hover:scale-105"
+                className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2.5 rounded-xl am-btn-primary disabled:opacity-50 transition-all active:scale-95 shrink-0"
+                aria-label="Send message"
               >
                 <Send className="w-4 h-4" />
               </button>

@@ -66,14 +66,14 @@ export default function EventsHubsPage() {
         </p>
       </div>
 
-      {/* Top Navigation Tabs - Exactly per specification */}
-      <div className="flex items-center gap-2 border-b border-white/10 pb-1 text-xs">
+      {/* Top Navigation Tabs - Scrollable on mobile without overflow */}
+      <div className="flex items-center gap-2 border-b border-white/10 pb-2 text-xs overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 flex-nowrap">
         <button
           onClick={() => setActiveTab('upcoming')}
-          className={`px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+          className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 shrink-0 ${
             activeTab === 'upcoming'
               ? 'am-gold-gradient text-black font-bold shadow-md'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              : 'text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10'
           }`}
         >
           <Calendar className="w-3.5 h-3.5" /> Upcoming Events
@@ -81,10 +81,10 @@ export default function EventsHubsPage() {
 
         <button
           onClick={() => setActiveTab('hubs')}
-          className={`px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+          className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 shrink-0 ${
             activeTab === 'hubs'
               ? 'am-gold-gradient text-black font-bold shadow-md'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              : 'text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10'
           }`}
         >
           <Building2 className="w-3.5 h-3.5" /> City Hubs
@@ -92,10 +92,10 @@ export default function EventsHubsPage() {
 
         <button
           onClick={() => setActiveTab('past')}
-          className={`px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+          className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 shrink-0 ${
             activeTab === 'past'
               ? 'am-gold-gradient text-black font-bold shadow-md'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              : 'text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10'
           }`}
         >
           <Clock className="w-3.5 h-3.5" /> Past Events
@@ -103,10 +103,10 @@ export default function EventsHubsPage() {
 
         <button
           onClick={() => setActiveTab('my')}
-          className={`px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 ${
+          className={`min-h-[44px] px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center gap-2 shrink-0 ${
             activeTab === 'my'
               ? 'am-gold-gradient text-black font-bold shadow-md'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              : 'text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10'
           }`}
         >
           <CheckCircle2 className="w-3.5 h-3.5" /> My Events
@@ -175,13 +175,13 @@ export default function EventsHubsPage() {
                     </div>
 
                     {isRegistered ? (
-                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-1">
+                      <span className="min-h-[44px] px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-1">
                         <CheckCircle2 className="w-3.5 h-3.5" /> RSVP'd
                       </span>
                     ) : (
                       <button
                         onClick={() => handleRegister(event.id)}
-                        className="px-4 py-2 rounded-xl am-btn-primary text-xs font-semibold shadow-md hover:scale-105 transition-all"
+                        className="min-h-[44px] px-4 py-2 rounded-xl am-btn-primary text-xs font-semibold shadow-md active:scale-95 transition-all flex items-center justify-center"
                       >
                         Attend Event
                       </button>
@@ -218,13 +218,13 @@ export default function EventsHubsPage() {
                 )}
               </div>
 
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+              <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs gap-2">
                 <span className="text-gray-400 font-medium">
                   <strong className="text-white">{hub.member_count}</strong> active members
                 </span>
                 <button
                   onClick={() => handleToggleHub(hub.id)}
-                  className={`px-4 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`min-h-[44px] px-4 py-2 rounded-xl text-xs font-semibold transition-all flex items-center justify-center ${
                     hub.is_member
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                       : 'am-btn-primary'

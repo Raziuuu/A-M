@@ -91,50 +91,50 @@ export default function ProjectDetailPage() {
               <span className="text-emerald-400 font-semibold">• Status: {project.status.replace('_', ' ')}</span>
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight break-words">
               {project.title}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-5 text-xs text-gray-400">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-xs text-gray-400">
               <span className="flex items-center gap-1.5 text-amber-200">
-                <Building className="w-4 h-4 text-amber-400" />
-                {project.client_company || project.client_name}
+                <Building className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="truncate max-w-[200px]">{project.client_company || project.client_name}</span>
               </span>
               {project.location && (
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-gray-500" />
+                  <MapPin className="w-4 h-4 text-gray-500 shrink-0" />
                   {project.location}
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-gray-500" />
+                <Clock className="w-4 h-4 text-gray-500 shrink-0" />
                 Duration: {project.expected_duration}
               </span>
             </div>
           </div>
 
           {/* Action CTA */}
-          <div className="shrink-0 flex flex-col items-start md:items-end space-y-2">
+          <div className="shrink-0 w-full md:w-auto flex flex-col items-start md:items-end space-y-2 pt-2 md:pt-0 border-t md:border-t-0 border-white/10">
             <p className="text-[10px] uppercase font-bold text-gray-400">Commission Budget</p>
-            <p className="text-2xl font-extrabold text-white">
+            <p className="text-xl sm:text-2xl font-extrabold text-white">
               {project.currency} {project.budget_min?.toLocaleString()} - {project.budget_max?.toLocaleString()}
             </p>
 
             {isFree ? (
               <button
                 onClick={() => setUpgradeModalOpen(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-lg"
+                className="w-full sm:w-auto min-h-[44px] flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-lg"
               >
                 <Lock className="w-3.5 h-3.5" /> Unlock Application
               </button>
             ) : hasExpressedInterest ? (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+              <div className="w-full sm:w-auto min-h-[44px] flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
                 <CheckCircle2 className="w-4 h-4" /> Interest Registered
               </div>
             ) : (
               <button
                 onClick={() => setInterestModalOpen(true)}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-lg hover:scale-105 transition-all"
+                className="w-full sm:w-auto min-h-[44px] flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl am-btn-primary text-xs font-bold shadow-lg active:scale-95 transition-all"
               >
                 <Send className="w-3.5 h-3.5" /> Express Interest
               </button>

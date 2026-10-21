@@ -30,12 +30,30 @@
   --color-am-border-gold: rgba(223, 175, 75, 0.22);
 }
 
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   overflow-x: hidden;
+  max-width: 100vw;
   min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Universal Fluid Media & Typography Constraints */
+img, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  overflow-wrap: break-word;
 }
 
 /* Custom modern scrollbar */
