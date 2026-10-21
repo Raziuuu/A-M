@@ -11,18 +11,39 @@ export default function AdminProjectInterestsPage() {
   const [compensation, setCompensation] = useState<number>(12000);
   const [notes, setNotes] = useState<string>('');
 
-  const loadInterests = () => {
-    setInterests([...platformStore.getProjectInterests()]);
+  const loadInterests = async () => {
+    try {
+      const res = await fetch('/api/project-interests');
+      const data = await res.json();
+      if (data.interests) {
+        setInterests(data.interests);
+      }
+    } catch (err) {
+      console.error('Failed to load project interests:', err);
+    }
   };
 
   useEffect(() => {
     loadInterests();
   }, []);
 
-  const handleUpdateStatus = (interestId: string, status: ProjectInterest['status']) => {
-    platformStore.updateInterestStatus(interestId, status, notes || undefined, compensation || undefined);
-    loadInterests();
-    setActiveInterest(null);
+  const handleUpdateStatus = async (interestId: string, status: ProjectInterest['status']) => {
+    try {
+      await fetch('/api/project-interests', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interestId,
+          status,
+          adminNotes: notes || undefined,
+          agreedCompensation: compensation || undefined,
+        }),
+      });
+      loadInterests();
+      setActiveInterest(null);
+    } catch (err) {
+      console.error('Failed to update interest status:', err);
+    }
   };
 
   return (
@@ -97,6 +118,16 @@ export default function AdminProjectInterestsPage() {
             )}
           </div>
         ))}
+
+        {interests.length === 0 && (
+          <div className="py-16 text-center space-y-3 am-card p-8 border-white/5">
+            <Compass className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No project applications yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              Expressions of interest submitted by Skill Network members for published commissions will appear here for review and candidate selection.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

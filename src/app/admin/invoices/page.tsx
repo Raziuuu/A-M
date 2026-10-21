@@ -11,7 +11,18 @@ export default function AdminInvoicesPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
 
   useEffect(() => {
-    setInvoices(platformStore.getInvoices());
+    async function loadInvoices() {
+      try {
+        const res = await fetch('/api/invoices');
+        const data = await res.json();
+        if (data.invoices) {
+          setInvoices(data.invoices);
+        }
+      } catch (err) {
+        console.error('Failed to load invoices:', err);
+      }
+    }
+    loadInvoices();
   }, []);
 
   return (
@@ -64,6 +75,16 @@ export default function AdminInvoicesPage() {
             ))}
           </tbody>
         </table>
+
+        {invoices.length === 0 && (
+          <div className="py-16 text-center space-y-3">
+            <Receipt className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No invoices recorded yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              Customer payment receipts and tax compliance invoices will appear here upon verified checkout completion.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

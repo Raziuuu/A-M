@@ -48,6 +48,10 @@ export default function AdminOverviewPage() {
       const interests = platformStore.getProjectInterests();
       const invoices = platformStore.getInvoices();
 
+      const totalRevNum = invoices.reduce((sum, inv) => sum + (Number(inv.total_amount) || 0), 0);
+      const mrrNum = premium.filter(p => p.membership_tier === 'monthly').length * 9 +
+                     Math.round((premium.filter(p => p.membership_tier === 'annual').length * 90) / 12);
+
       setStats({
         totalUsers: profiles.length,
         freeUsers: Math.max(0, profiles.length - premium.length),
@@ -56,8 +60,8 @@ export default function AdminOverviewPage() {
         pendingRequests: requests.filter(r => r.status === 'pending_review').length,
         interestsCount: interests.length,
         invoicesCount: invoices.length,
-        totalRevenue: '€18,240',
-        mrr: '€1,420',
+        totalRevenue: `€${totalRevNum.toLocaleString()}`,
+        mrr: `€${mrrNum.toLocaleString()}`,
       });
     }
 

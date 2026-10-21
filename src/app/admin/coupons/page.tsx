@@ -13,33 +13,46 @@ export default function AdminCouponsPage() {
   const [maxUses, setMaxUses] = useState<number>(500);
   const [successMsg, setSuccessMsg] = useState(false);
 
-  const loadCoupons = () => {
-    setCoupons([...platformStore.getCoupons()]);
+  const loadCoupons = async () => {
+    try {
+      const res = await fetch('/api/coupons');
+      const data = await res.json();
+      if (data.coupons) {
+        setCoupons(data.coupons);
+      }
+    } catch (err) {
+      console.error('Failed to load coupons:', err);
+    }
   };
 
   useEffect(() => {
     loadCoupons();
   }, []);
 
-  const handleCreateCoupon = (e: React.FormEvent) => {
+  const handleCreateCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code) return;
 
-    platformStore.createCoupon({
-      code: code.trim().toUpperCase(),
-      discount_type: discountType,
-      discount_value: Number(discountValue),
-      max_uses: Number(maxUses),
-      max_uses_per_user: 1,
-      applicable_plans: ['monthly', 'annual'],
-      starts_at: new Date().toISOString(),
-      is_active: true,
-    });
-
-    setSuccessMsg(true);
-    setCode('');
-    loadCoupons();
-    setTimeout(() => setSuccessMsg(false), 2500);
+    try {
+      const res = await fetch('/api/coupons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: code.trim().toUpperCase(),
+          discount_type: discountType,
+          discount_value: Number(discountValue),
+          max_uses: Number(maxUses),
+        }),
+      });
+      if (res.ok) {
+        setSuccessMsg(true);
+        setCode('');
+        loadCoupons();
+        setTimeout(() => setSuccessMsg(false), 2500);
+      }
+    } catch (err) {
+      console.error('Failed to create coupon:', err);
+    }
   };
 
   return (
@@ -155,6 +168,16 @@ export default function AdminCouponsPage() {
             ))}
           </tbody>
         </table>
+
+        {coupons.length === 0 && (
+          <div className="py-16 text-center space-y-3">
+            <Tag className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No coupons created yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              Use the form above to generate official discount codes for monthly and annual membership plans.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

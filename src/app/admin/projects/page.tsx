@@ -9,15 +9,23 @@ import { Project, ProjectStatus } from '@/lib/types';
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const loadProjects = () => {
-    setProjects([...platformStore.getAllProjectsForAdmin()]);
+  const loadProjects = async () => {
+    try {
+      const res = await fetch('/api/projects?all=true');
+      const data = await res.json();
+      if (data.projects) {
+        setProjects(data.projects);
+      }
+    } catch (err) {
+      console.error('Failed to load projects:', err);
+    }
   };
 
   useEffect(() => {
     loadProjects();
   }, []);
 
-  const changeStatus = (id: string, newStatus: ProjectStatus) => {
+  const changeStatus = async (id: string, newStatus: ProjectStatus) => {
     platformStore.updateProject(id, { status: newStatus });
     loadProjects();
   };
@@ -89,6 +97,16 @@ export default function AdminProjectsPage() {
             ))}
           </tbody>
         </table>
+
+        {projects.length === 0 && (
+          <div className="py-16 text-center space-y-3">
+            <Briefcase className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No projects published yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              Marketplace projects and client commissions will appear here. Click "New Commission" above to publish a project.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

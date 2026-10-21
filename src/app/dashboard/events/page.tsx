@@ -22,9 +22,21 @@ export default function EventsHubsPage() {
   const [hubs, setHubs] = useState<Hub[]>([]);
   const [registeredEventIds, setRegisteredEventIds] = useState<string[]>([]);
 
-  const loadData = () => {
-    setEvents(platformStore.getEvents(activeTab === 'my' ? 'my' : activeTab === 'past' ? 'past' : 'upcoming'));
-    setHubs(platformStore.getHubs());
+  const loadData = async () => {
+    try {
+      const [eventsRes, hubsRes] = await Promise.all([
+        fetch(`/api/events?filter=${activeTab === 'past' ? 'past' : 'upcoming'}`).then(r => r.json()).catch(() => ({ events: [] })),
+        fetch('/api/hubs').then(r => r.json()).catch(() => ({ hubs: [] })),
+      ]);
+      if (eventsRes.events) {
+        setEvents(eventsRes.events);
+      }
+      if (hubsRes.hubs) {
+        setHubs(hubsRes.hubs);
+      }
+    } catch (err) {
+      console.error('Failed to load events/hubs:', err);
+    }
   };
 
   useEffect(() => {
@@ -32,14 +44,11 @@ export default function EventsHubsPage() {
   }, [activeTab]);
 
   const handleRegister = (eventId: string) => {
-    platformStore.registerForEvent(eventId);
-    setRegisteredEventIds([...registeredEventIds, eventId]);
-    loadData();
+    setRegisteredEventIds(prev => [...prev, eventId]);
   };
 
   const handleToggleHub = (hubId: string) => {
-    platformStore.toggleHubMembership(hubId);
-    loadData();
+    setHubs(prev => prev.map(h => h.id === hubId ? { ...h, is_member: !h.is_member } : h));
   };
 
   return (
@@ -229,19 +238,23 @@ export default function EventsHubsPage() {
         </div>
       )}
 
-      {events.length === 0 && activeTab !== 'hubs' && (
-        <div className="py-16 text-center space-y-3 am-card p-8">
-          <Calendar className="w-10 h-10 text-gray-600 mx-auto" />
-          <h3 className="text-base font-bold text-white">No events in this category</h3>
+      {hubs.length === 0 && activeTab === 'hubs' && (
+        <div className="py-16 text-center space-y-3 am-card p-8 border-white/5">
+          <Building2 className="w-10 h-10 text-gray-600 mx-auto" />
+          <h3 className="text-base font-bold text-white">No hubs available yet</h3>
           <p className="text-xs text-gray-400 max-w-sm mx-auto">
-            Explore upcoming international events or join our city chapters.
+            Regional and industry chapters will appear here once established by Action = Matter leadership.
           </p>
-          <button
-            onClick={() => setActiveTab('upcoming')}
-            className="px-4 py-2 rounded-xl am-btn-secondary text-xs font-semibold"
-          >
-            View Upcoming Events
-          </button>
+        </div>
+      )}
+
+      {events.length === 0 && activeTab !== 'hubs' && (
+        <div className="py-16 text-center space-y-3 am-card p-8 border-white/5">
+          <Calendar className="w-10 h-10 text-gray-600 mx-auto" />
+          <h3 className="text-base font-bold text-white">No upcoming events</h3>
+          <p className="text-xs text-gray-400 max-w-sm mx-auto">
+            Flagship summits and roundtable schedules will be published here by leadership.
+          </p>
         </div>
       )}
     </div>

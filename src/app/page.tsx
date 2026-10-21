@@ -101,25 +101,25 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Verified Stats Row */}
+          {/* Verified Platform Capabilities Row */}
           <div className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto text-left">
             <div className="am-card p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Global Reach</span>
-              <p className="text-xl font-bold text-white">20+ Countries</p>
-              <p className="text-[10px] text-gray-400">Amsterdam • London • SF</p>
+              <span className="text-[10px] uppercase font-bold text-gray-500">Global Currency</span>
+              <p className="text-xl font-bold text-white">EUR • USD • INR</p>
+              <p className="text-[10px] text-gray-400">Regional Tier Pricing</p>
             </div>
             <div className="am-card p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Curation Rate</span>
+              <span className="text-[10px] uppercase font-bold text-gray-500">Curation Standard</span>
               <p className="text-xl font-bold text-amber-300">100% Vetted</p>
-              <p className="text-[10px] text-gray-400">By Executive Team</p>
+              <p className="text-[10px] text-gray-400">Executive Accreditation</p>
             </div>
             <div className="am-card p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Live Commissions</span>
-              <p className="text-xl font-bold text-white">€18K - €50K</p>
-              <p className="text-[10px] text-gray-400">Funded Engagements</p>
+              <span className="text-[10px] uppercase font-bold text-gray-500">Commissions</span>
+              <p className="text-xl font-bold text-white">Direct Client</p>
+              <p className="text-[10px] text-gray-400">Scoped Engagements</p>
             </div>
             <div className="am-card p-4 space-y-1">
-              <span className="text-[10px] uppercase font-bold text-gray-500">Security</span>
+              <span className="text-[10px] uppercase font-bold text-gray-500">Payments</span>
               <p className="text-xl font-bold text-emerald-400">Audited</p>
               <p className="text-[10px] text-gray-400">Stripe & Razorpay</p>
             </div>

@@ -31,15 +31,23 @@ export default function PeoplePage() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/api/auth/me')
-      .then(res => res.json())
-      .then(data => {
-        if (data.user) {
-          setCurrentUser(data.user);
-          setMembers(platformStore.getSkillMembers());
+    async function loadData() {
+      try {
+        const [meRes, membersRes] = await Promise.all([
+          fetch('/api/auth/me').then(r => r.json()).catch(() => ({ user: null })),
+          fetch('/api/skill-network').then(r => r.json()).catch(() => ({ members: [] })),
+        ]);
+        if (meRes.user) {
+          setCurrentUser(meRes.user);
         }
-      })
-      .catch(() => {});
+        if (membersRes.members) {
+          setMembers(membersRes.members);
+        }
+      } catch (e) {
+        console.error('Failed to load skill members:', e);
+      }
+    }
+    loadData();
   }, []);
 
   const isFree = currentUser?.role === 'free_user' && currentUser.membership_status !== 'active';
@@ -277,23 +285,29 @@ export default function PeoplePage() {
       </div>
 
       {filteredMembers.length === 0 && (
-        <div className="py-16 text-center space-y-3 am-card p-8">
+        <div className="py-16 text-center space-y-3 am-card p-8 border-white/5">
           <Users className="w-10 h-10 text-gray-600 mx-auto" />
-          <h3 className="text-base font-bold text-white">No members match your criteria</h3>
+          <h3 className="text-base font-bold text-white">
+            {members.length === 0 ? 'No Skill Network members yet' : 'No members match your criteria'}
+          </h3>
           <p className="text-xs text-gray-400 max-w-sm mx-auto">
-            Try adjusting your search terms or clearing the country and skill filters.
+            {members.length === 0
+              ? 'Active, approved members will appear in this directory once verified by Action = Matter leadership.'
+              : 'Try adjusting your search terms or clearing the country and skill filters.'}
           </p>
-          <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedSkill('');
-              setSelectedCountry('');
-              setSelectedAvailability('');
-            }}
-            className="px-4 py-2 rounded-xl am-btn-secondary text-xs font-semibold"
-          >
-            Reset Filters
-          </button>
+          {members.length > 0 && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedSkill('');
+                setSelectedCountry('');
+                setSelectedAvailability('');
+              }}
+              className="px-4 py-2 rounded-xl am-btn-secondary text-xs font-semibold"
+            >
+              Reset Filters
+            </button>
+          )}
         </div>
       )}
 

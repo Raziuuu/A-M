@@ -23,10 +23,17 @@ export function GlobalSearchModal({ isOpen, onClose, currentUser }: GlobalSearch
 
   useEffect(() => {
     if (isOpen) {
-      setProjects(platformStore.getProjects());
-      setMembers(platformStore.getSkillMembers());
-      setEvents(platformStore.getEvents('upcoming'));
-      setHubs(platformStore.getHubs());
+      Promise.all([
+        fetch('/api/projects').then(r => r.json()).catch(() => ({ projects: [] })),
+        fetch('/api/skill-network').then(r => r.json()).catch(() => ({ members: [] })),
+        fetch('/api/events?filter=upcoming').then(r => r.json()).catch(() => ({ events: [] })),
+        fetch('/api/hubs').then(r => r.json()).catch(() => ({ hubs: [] })),
+      ]).then(([p, m, e, h]) => {
+        if (p.projects) setProjects(p.projects);
+        if (m.members) setMembers(m.members);
+        if (e.events) setEvents(e.events);
+        if (h.hubs) setHubs(h.hubs);
+      });
     }
   }, [isOpen]);
 

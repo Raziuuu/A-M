@@ -9,8 +9,16 @@ export default function AdminProjectRequestsPage() {
   const [requests, setRequests] = useState<ProjectRequest[]>([]);
   const [convertedId, setConvertedId] = useState<string | null>(null);
 
-  const loadRequests = () => {
-    setRequests([...platformStore.getProjectRequests()]);
+  const loadRequests = async () => {
+    try {
+      const res = await fetch('/api/project-requests');
+      const data = await res.json();
+      if (data.requests) {
+        setRequests(data.requests);
+      }
+    } catch (err) {
+      console.error('Failed to load project requests:', err);
+    }
   };
 
   useEffect(() => {
@@ -92,6 +100,16 @@ export default function AdminProjectRequestsPage() {
             </div>
           </div>
         ))}
+
+        {requests.length === 0 && (
+          <div className="py-16 text-center space-y-3 am-card p-8 border-white/5">
+            <ClipboardList className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No client project inquiries yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              Inbound client inquiries submitted from /request-project will appear here for review and conversion into live commissions.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

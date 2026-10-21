@@ -31,18 +31,26 @@ export default function ProjectsPage() {
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
   const [userInterests, setUserInterests] = useState<string[]>([]);
 
-  const fetchPlatformData = () => {
-    fetch('/api/auth/me')
-      .then(res => res.json())
-      .then(data => {
-        if (data.user) {
-          setCurrentUser(data.user);
-          setProjects(platformStore.getProjects());
-          const interests = platformStore.getUserInterests(data.user.id);
-          setUserInterests(interests.map(i => i.project_id));
+  const fetchPlatformData = async () => {
+    try {
+      const [meRes, projRes] = await Promise.all([
+        fetch('/api/auth/me').then(r => r.json()).catch(() => ({ user: null })),
+        fetch('/api/projects').then(r => r.json()).catch(() => ({ projects: [] })),
+      ]);
+
+      if (meRes.user) {
+        setCurrentUser(meRes.user);
+        const interestsRes = await fetch(`/api/project-interests?userId=${meRes.user.id}`).then(r => r.json()).catch(() => ({ interests: [] }));
+        if (interestsRes.interests) {
+          setUserInterests(interestsRes.interests.map((i: any) => i.project_id));
         }
-      })
-      .catch(() => {});
+      }
+      if (projRes.projects) {
+        setProjects(projRes.projects);
+      }
+    } catch (err) {
+      console.error('Failed to load projects:', err);
+    }
   };
 
   useEffect(() => {
@@ -242,22 +250,28 @@ export default function ProjectsPage() {
       </div>
 
       {filteredProjects.length === 0 && (
-        <div className="py-16 text-center space-y-3 am-card p-8">
+        <div className="py-16 text-center space-y-3 am-card p-8 border-white/5">
           <Briefcase className="w-10 h-10 text-gray-600 mx-auto" />
-          <h3 className="text-base font-bold text-white">No projects match your criteria</h3>
+          <h3 className="text-base font-bold text-white">
+            {projects.length === 0 ? 'No projects are currently available' : 'No projects match your criteria'}
+          </h3>
           <p className="text-xs text-gray-400 max-w-sm mx-auto">
-            Try resetting your filters or explore other opportunities in the network.
+            {projects.length === 0
+              ? 'New vetted client commissions will appear here as soon as approved and published by Action = Matter leadership.'
+              : 'Try resetting your filters or explore other opportunities in the network.'}
           </p>
-          <button
-            onClick={() => {
-              setSearchQuery('');
-              setSelectedCategory('');
-              setSelectedWorkMode('');
-            }}
-            className="px-4 py-2 rounded-xl am-btn-secondary text-xs font-semibold"
-          >
-            Reset Filters
-          </button>
+          {projects.length > 0 && (
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('');
+                setSelectedWorkMode('');
+              }}
+              className="px-4 py-2 rounded-xl am-btn-secondary text-xs font-semibold"
+            >
+              Reset Filters
+            </button>
+          )}
         </div>
       )}
 

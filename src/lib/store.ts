@@ -17,122 +17,16 @@ import {
 import { REGIONAL_PRICING } from './countries';
 
 // Initial Founder / Owner Profile
-export const INITIAL_PROFILES: Profile[] = [
-  {
-    id: '88e24267-416e-4060-8867-14d34e12a8f7',
-    email: 'luke@zetzema.com',
-    full_name: 'Luke Zetzema',
-    username: 'actionmatter',
-    avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-    country_code: 'NL',
-    country_name: 'Netherlands',
-    city: 'Amsterdam',
-    timezone: 'Europe/Amsterdam',
-    locale: 'en-US',
-    profession: 'CEO & Founder',
-    bio: 'Founder & CEO at ACTION = MATTER. Where Ideas Turn Into Action.',
-    website: 'https://actionismatter.com',
-    linkedin: 'https://linkedin.com',
-    role: 'ceo',
-    membership_status: 'active',
-    membership_tier: 'annual',
-    cancel_at_period_end: false,
-    created_at: '2026-01-01T00:00:00Z',
-    updated_at: '2026-01-01T00:00:00Z'
-  }
-];
-
+export const INITIAL_PROFILES: Profile[] = [];
 export const INITIAL_SKILL_MEMBERS: SkillNetworkMember[] = [];
 export const INITIAL_PROJECTS: Project[] = [];
 export const INITIAL_PROJECT_REQUESTS: ProjectRequest[] = [];
 export const INITIAL_PROJECT_INTERESTS: ProjectInterest[] = [];
 export const INITIAL_SUBSCRIPTIONS: Subscription[] = [];
-
-// System Coupons for Checkout Discounts
-export const INITIAL_COUPONS: Coupon[] = [
-  {
-    id: 'coup_001',
-    code: 'ACTION50',
-    discount_type: 'percentage',
-    discount_value: 50,
-    max_uses: 500,
-    current_uses: 0,
-    max_uses_per_user: 1,
-    applicable_plans: ['monthly', 'annual'],
-    starts_at: '2026-01-01T00:00:00Z',
-    is_active: true,
-    created_at: '2026-01-01T00:00:00Z'
-  },
-  {
-    id: 'coup_002',
-    code: 'WELCOME20',
-    discount_type: 'percentage',
-    discount_value: 20,
-    max_uses: 1000,
-    current_uses: 0,
-    max_uses_per_user: 1,
-    applicable_plans: ['monthly', 'annual'],
-    starts_at: '2026-01-01T00:00:00Z',
-    is_active: true,
-    created_at: '2026-01-01T00:00:00Z'
-  }
-];
-
+export const INITIAL_COUPONS: Coupon[] = [];
 export const INITIAL_INVOICES: Invoice[] = [];
 export const INITIAL_EVENTS: Event[] = [];
-
-// Official Action = Matter Regional Chapters
-export const INITIAL_HUBS: Hub[] = [
-  {
-    id: 'hub_ams',
-    name: 'Amsterdam City Hub',
-    slug: 'amsterdam',
-    type: 'city',
-    city: 'Amsterdam',
-    country: 'Netherlands',
-    description: 'European headquarters hub connecting Netherlands-based engineers, tech leads, and venture innovators.',
-    icon: 'Building2',
-    member_count: 0,
-    is_member: false
-  },
-  {
-    id: 'hub_lon',
-    name: 'London City Hub',
-    slug: 'london',
-    type: 'city',
-    city: 'London',
-    country: 'United Kingdom',
-    description: 'Connecting financial technology architects, quantitative developers, and systems specialists.',
-    icon: 'Building',
-    member_count: 0,
-    is_member: false
-  },
-  {
-    id: 'hub_nyc',
-    name: 'New York City Hub',
-    slug: 'new-york',
-    type: 'city',
-    city: 'New York',
-    country: 'United States',
-    description: 'Connecting North American engineering leaders, venture founders, and autonomous systems builders.',
-    icon: 'Compass',
-    member_count: 0,
-    is_member: false
-  },
-  {
-    id: 'hub_blr',
-    name: 'Bengaluru Tech Hub',
-    slug: 'bengaluru',
-    type: 'city',
-    city: 'Bengaluru',
-    country: 'India',
-    description: 'Premier technology and engineering community for elite full-stack and cloud architects.',
-    icon: 'Cpu',
-    member_count: 0,
-    is_member: false
-  }
-];
-
+export const INITIAL_HUBS: Hub[] = [];
 export const INITIAL_MESSAGES: Message[] = [];
 export const INITIAL_THREADS: MessageThread[] = [];
 export const INITIAL_AUDIT_LOGS: AuditLog[] = [];
@@ -152,10 +46,11 @@ class PlatformStore {
   private threads: MessageThread[] = [...INITIAL_THREADS];
   private auditLogs: AuditLog[] = [...INITIAL_AUDIT_LOGS];
 
-  private currentUserId: string = '88e24267-416e-4060-8867-14d34e12a8f7';
+  private currentUserId: string = '';
 
-  getCurrentUser(): Profile {
-    return this.profiles.find(p => p.id === this.currentUserId) || this.profiles[0];
+  getCurrentUser(): Profile | null {
+    if (this.profiles.length === 0) return null;
+    return this.profiles.find(p => p.id === this.currentUserId) || this.profiles[0] || null;
   }
 
   setCurrentUser(userId: string): Profile | null {
@@ -362,6 +257,13 @@ class PlatformStore {
     req.converted_project_id = newProject.id;
     req.updated_at = new Date().toISOString();
     return newProject;
+  }
+
+  updateProjectRequest(id: string, updates: Partial<ProjectRequest>): ProjectRequest | null {
+    const idx = this.projectRequests.findIndex(r => r.id === id);
+    if (idx === -1) return null;
+    this.projectRequests[idx] = { ...this.projectRequests[idx], ...updates, updated_at: new Date().toISOString() };
+    return this.projectRequests[idx];
   }
 
   // Membership & Payments
@@ -629,8 +531,8 @@ class PlatformStore {
     const currentUser = this.getCurrentUser();
     this.auditLogs.unshift({
       id: `aud_${Date.now()}`,
-      actor_id: currentUser.id,
-      actor_name: `${currentUser.full_name} (${currentUser.role})`,
+      actor_id: currentUser?.id || 'system',
+      actor_name: currentUser ? `${currentUser.full_name} (${currentUser.role})` : 'System Engine',
       action,
       entity,
       entity_id,

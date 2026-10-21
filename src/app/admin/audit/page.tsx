@@ -56,6 +56,16 @@ export default function AdminAuditLogsPage() {
             ))}
           </tbody>
         </table>
+
+        {logs.length === 0 && (
+          <div className="py-16 text-center space-y-3 font-sans">
+            <Shield className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No audit events recorded yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              Administrative role alterations, project publications, and curation decisions will be permanently logged here.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -8,26 +8,46 @@ import { SkillNetworkMember } from '@/lib/types';
 export default function AdminSkillNetworkCurationPage() {
   const [members, setMembers] = useState<SkillNetworkMember[]>([]);
 
-  const loadMembers = () => {
-    setMembers([...platformStore.getAllSkillMembersForAdmin()]);
+  const loadMembers = async () => {
+    try {
+      const res = await fetch('/api/skill-network?all=true');
+      const data = await res.json();
+      if (data.members) {
+        setMembers(data.members);
+      }
+    } catch (err) {
+      console.error('Failed to load skill members:', err);
+    }
   };
 
   useEffect(() => {
     loadMembers();
   }, []);
 
-  const toggleApproval = (id: string, current: boolean) => {
-    platformStore.updateMemberStatus(id, { is_approved: !current });
+  const toggleApproval = async (id: string, current: boolean) => {
+    await fetch('/api/skill-network', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, is_approved: !current }),
+    });
     loadMembers();
   };
 
-  const toggleFeatured = (id: string, current: boolean) => {
-    platformStore.updateMemberStatus(id, { is_featured: !current });
+  const toggleFeatured = async (id: string, current: boolean) => {
+    await fetch('/api/skill-network', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, is_featured: !current }),
+    });
     loadMembers();
   };
 
-  const toggleActive = (id: string, current: boolean) => {
-    platformStore.updateMemberStatus(id, { is_active: !current });
+  const toggleActive = async (id: string, current: boolean) => {
+    await fetch('/api/skill-network', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, is_active: !current }),
+    });
     loadMembers();
   };
 
@@ -115,6 +135,16 @@ export default function AdminSkillNetworkCurationPage() {
             ))}
           </tbody>
         </table>
+
+        {members.length === 0 && (
+          <div className="py-16 text-center space-y-3">
+            <Sparkles className="w-10 h-10 text-gray-600 mx-auto" />
+            <h3 className="text-base font-bold text-white">No Skill Network profiles created yet</h3>
+            <p className="text-xs text-gray-400 max-w-sm mx-auto">
+              When users purchase Premium and join the Skill Network, their applications will appear here for verification and directory approval.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
