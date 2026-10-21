@@ -19,18 +19,18 @@ import { REGIONAL_PRICING } from './countries';
 // Initial Founder / Owner Profile
 export const INITIAL_PROFILES: Profile[] = [
   {
-    id: 'usr_ceo_001',
-    email: 'ceo@actionismatter.com',
-    full_name: 'Mahammad Razi',
-    username: 'razi',
+    id: '88e24267-416e-4060-8867-14d34e12a8f7',
+    email: 'luke@zetzema.com',
+    full_name: 'Luke Zetzema',
+    username: 'actionmatter',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     country_code: 'NL',
     country_name: 'Netherlands',
     city: 'Amsterdam',
     timezone: 'Europe/Amsterdam',
     locale: 'en-US',
-    profession: 'Founder & CEO',
-    bio: 'Founder at ACTION = MATTER. Where Ideas Turn Into Action.',
+    profession: 'CEO & Founder',
+    bio: 'Founder & CEO at ACTION = MATTER. Where Ideas Turn Into Action.',
     website: 'https://actionismatter.com',
     linkedin: 'https://linkedin.com',
     role: 'ceo',
@@ -152,8 +152,7 @@ class PlatformStore {
   private threads: MessageThread[] = [...INITIAL_THREADS];
   private auditLogs: AuditLog[] = [...INITIAL_AUDIT_LOGS];
 
-  // Active user session simulation (defaulting to Elena - Premium, but switchable on demand to Free or CEO)
-  private currentUserId: string = 'usr_ceo_001';
+  private currentUserId: string = '88e24267-416e-4060-8867-14d34e12a8f7';
 
   getCurrentUser(): Profile {
     return this.profiles.find(p => p.id === this.currentUserId) || this.profiles[0];
