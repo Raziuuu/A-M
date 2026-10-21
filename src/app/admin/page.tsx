@@ -30,24 +30,38 @@ export default function AdminOverviewPage() {
   });
 
   useEffect(() => {
-    const profiles = platformStore.getProfiles();
-    const premium = profiles.filter(p => p.role === 'premium_member' || p.membership_status === 'active');
-    const projects = platformStore.getAllProjectsForAdmin();
-    const requests = platformStore.getProjectRequests();
-    const interests = platformStore.getProjectInterests();
-    const invoices = platformStore.getInvoices();
+    async function loadStats() {
+      let profiles = platformStore.getProfiles();
+      try {
+        const res = await fetch('/api/admin/users');
+        const data = await res.json();
+        if (data.profiles) {
+          profiles = data.profiles;
+        }
+      } catch (e) {
+        console.warn('Could not fetch remote profiles for admin stats:', e);
+      }
 
-    setStats({
-      totalUsers: profiles.length,
-      freeUsers: profiles.length - premium.length,
-      premiumMembers: premium.length,
-      activeProjects: projects.length,
-      pendingRequests: requests.filter(r => r.status === 'pending_review').length,
-      interestsCount: interests.length,
-      invoicesCount: invoices.length,
-      totalRevenue: '€18,240',
-      mrr: '€1,420',
-    });
+      const premium = profiles.filter(p => p.role === 'premium_member' || p.membership_status === 'active');
+      const projects = platformStore.getAllProjectsForAdmin();
+      const requests = platformStore.getProjectRequests();
+      const interests = platformStore.getProjectInterests();
+      const invoices = platformStore.getInvoices();
+
+      setStats({
+        totalUsers: profiles.length,
+        freeUsers: Math.max(0, profiles.length - premium.length),
+        premiumMembers: premium.length,
+        activeProjects: projects.length,
+        pendingRequests: requests.filter(r => r.status === 'pending_review').length,
+        interestsCount: interests.length,
+        invoicesCount: invoices.length,
+        totalRevenue: '€18,240',
+        mrr: '€1,420',
+      });
+    }
+
+    loadStats();
   }, []);
 
   return (
