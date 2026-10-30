@@ -227,32 +227,35 @@ function UpgradeContent() {
         {/* Right Col: Order Summary & Checkout */}
         <div className="space-y-6">
           <div className="am-card p-6 am-gold-border space-y-5 sticky top-24">
-            <h3 className="text-sm font-bold text-white border-b border-white/10 pb-3">
-              Order Summary
-            </h3>
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h3 className="text-sm font-bold text-white">
+                Access Summary
+              </h3>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold uppercase tracking-wider border border-emerald-500/30">
+                100% Free
+              </span>
+            </div>
 
             <div className="space-y-2.5 text-xs">
               <div className="flex items-center justify-between text-gray-300">
                 <span>Skill Network {billingCycle === 'monthly' ? 'Monthly' : 'Annual'} Plan</span>
-                <span>{formatPrice(baseAmount, currency)}</span>
+                <span className="text-gray-500 line-through">{formatPrice(baseAmount, currency)}</span>
               </div>
 
-              {discountAmount > 0 && (
-                <div className="flex items-center justify-between text-emerald-400 font-semibold">
-                  <span>Discount ({couponStatus?.discount}%)</span>
-                  <span>-{formatPrice(discountAmount, currency)}</span>
-                </div>
-              )}
+              <div className="flex items-center justify-between text-emerald-400 font-semibold">
+                <span>Promotional Grant</span>
+                <span>-100% (Complimentary)</span>
+              </div>
 
               <div className="flex items-center justify-between text-gray-400 text-[11px]">
-                <span>Taxes</span>
-                <span>Included</span>
+                <span>Payment Details</span>
+                <span className="text-emerald-400 font-semibold">Not Required</span>
               </div>
 
               <div className="pt-3 border-t border-white/10 flex items-baseline justify-between">
-                <span className="text-sm font-bold text-white">Total Amount</span>
+                <span className="text-sm font-bold text-white">Total Due Today</span>
                 <span className="text-2xl font-black text-amber-300">
-                  {formatPrice(totalAmount, currency)}
+                  $0.00 Free
                 </span>
               </div>
             </div>
@@ -267,18 +270,18 @@ function UpgradeContent() {
             <button
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl am-btn-primary text-xs font-bold shadow-xl transition-all hover:scale-105 disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl am-btn-primary text-xs font-bold shadow-xl transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
             >
-              {loading ? 'Processing Checkout...' : 'Proceed to Payment'}
-              <ArrowRight className="w-4 h-4" />
+              {loading ? 'Activating Premium Privileges...' : 'Activate Instant Premium Access (Free)'}
+              <Sparkles className="w-4 h-4" />
             </button>
 
             <div className="pt-3 border-t border-white/10 space-y-2 text-[11px] text-gray-500 text-center">
-              <p className="flex items-center justify-center gap-1.5 text-gray-400">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                Verified Server-Side Webhook Activation
+              <p className="flex items-center justify-center gap-1.5 text-emerald-400 font-medium">
+                <ShieldCheck className="w-4 h-4" />
+                Instant Account Elevation • No Card Required
               </p>
-              <p>Supports Visa, Mastercard, AMEX, Apple Pay, Google Pay, and UPI via Stripe/Razorpay.</p>
+              <p>Direct immediate access granted to verified project commissions, messaging, and people directory.</p>
             </div>
           </div>
         </div>

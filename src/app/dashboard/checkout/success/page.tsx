@@ -27,20 +27,28 @@ function CheckoutSuccessContent() {
 
   useEffect(() => {
     // Execute verified server-side membership activation
-    fetch('/api/auth/me')
+    fetch('/api/membership/activate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ planId, currency }),
+    })
       .then(res => res.json())
       .then(data => {
         if (data.user) {
-          const result = platformStore.activatePremium(
-            data.user.id,
-            planId,
-            currency,
-            undefined,
-            provider
-          );
-          setActivatedInvoice(result.invoice);
-          setLoading(false);
+          try {
+            const result = platformStore.activatePremium(
+              data.user.id,
+              planId,
+              currency,
+              undefined,
+              provider
+            );
+            setActivatedInvoice(result.invoice);
+          } catch {
+            // platformStore in-memory fallback
+          }
         }
+        setLoading(false);
       })
       .catch(() => setLoading(false));
   }, [planId, currency, provider]);

@@ -67,45 +67,58 @@ export default function PricingPage() {
           </p>
         </div>
 
+        {/* Early Access Promotion Notice */}
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-emerald-500/10 to-amber-500/15 border border-amber-500/30 text-center space-y-1 max-w-2xl mx-auto shadow-lg">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" /> Early Access Promotion Active
+          </div>
+          <p className="text-sm font-bold text-white">Full Premium Membership is Currently 100% Free</p>
+          <p className="text-xs text-gray-300">
+            No credit card, Stripe, or payment details required. Immediate full access to all verified features.
+          </p>
+        </div>
+
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {/* Monthly Plan */}
           <div className="am-card p-8 space-y-6 flex flex-col justify-between">
             <div className="space-y-4">
               <span className="text-xs uppercase font-bold text-gray-400">Monthly Membership</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold text-white">{pricing.formattedMonthly}</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl text-gray-500 line-through">{pricing.formattedMonthly}</span>
+                <span className="text-4xl font-extrabold text-white">$0 Free</span>
                 <span className="text-xs text-gray-400">/ month</span>
               </div>
               <p className="text-xs text-gray-400">
                 Cancel anytime. Ideal for testing project fit and building your initial network presence.
               </p>
               <div className="space-y-2.5 pt-4 border-t border-white/10 text-xs text-gray-300">
-                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Directory Inclusion</p>
-                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Discover All Projects</p>
-                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Submit Proposals</p>
-                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Direct Messaging</p>
+                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Directory Inclusion</p>
+                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Discover All Projects</p>
+                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Submit Proposals</p>
+                <p className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Direct Messaging</p>
               </div>
             </div>
 
             <Link
               href={`/signup?plan=monthly&currency=${currency}`}
-              className="w-full py-3 rounded-xl am-btn-secondary text-center text-xs font-bold hover:border-amber-400/40"
+              className="w-full py-3.5 rounded-xl am-btn-secondary text-center text-xs font-bold hover:border-amber-400/40"
             >
-              Get Started Monthly
+              Get Free Monthly Access
             </Link>
           </div>
 
           {/* Annual Plan */}
           <div className="am-card p-8 am-gold-border space-y-6 flex flex-col justify-between relative bg-gradient-to-b from-amber-500/10 to-transparent shadow-xl">
             <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-amber-400 text-black text-[10px] font-extrabold uppercase">
-              Best Value
+              Free Access
             </div>
 
             <div className="space-y-4">
               <span className="text-xs uppercase font-bold text-amber-400">Annual Membership</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-4xl font-extrabold text-white">{pricing.formattedAnnual}</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl text-gray-500 line-through">{pricing.formattedAnnual}</span>
+                <span className="text-4xl font-extrabold text-amber-300">$0 Free</span>
                 <span className="text-xs text-gray-400">/ year</span>
               </div>
               <p className="text-xs text-gray-400">
@@ -121,9 +134,9 @@ export default function PricingPage() {
 
             <Link
               href={`/signup?plan=annual&currency=${currency}`}
-              className="w-full py-3 rounded-xl am-btn-primary text-center text-xs font-bold shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform"
+              className="w-full py-3.5 rounded-xl am-btn-primary text-center text-xs font-bold shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform"
             >
-              Join Skill Network Annually
+              Get Free Annual Access (Instant)
             </Link>
           </div>
         </div>

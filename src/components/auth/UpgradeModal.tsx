@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { X, Check, Sparkles, Shield, Zap, Globe, ArrowRight } from 'lucide-react';
+import { X, Check, Sparkles, Zap, Globe, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 import { SupportedCurrency } from '@/lib/types';
 import { REGIONAL_PRICING } from '@/lib/countries';
+import { toast } from 'sonner';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -21,12 +22,49 @@ export function UpgradeModal({
 }: UpgradeModalProps) {
   const [currency, setCurrency] = useState<SupportedCurrency>('USD');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
+  const [activating, setActivating] = useState(false);
+  const [activated, setActivated] = useState(false);
 
   if (!isOpen) return null;
 
   const pricing = REGIONAL_PRICING[currency];
-  const price = billingCycle === 'monthly' ? pricing.formattedMonthly : pricing.formattedAnnual;
+  const regularPrice = billingCycle === 'monthly' ? pricing.formattedMonthly : pricing.formattedAnnual;
   const cycleLabel = billingCycle === 'monthly' ? '/ month' : '/ year';
+
+  const handleInstantActivate = async () => {
+    setActivating(true);
+    try {
+      const res = await fetch('/api/membership/activate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: billingCycle, currency }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 401) {
+          toast.error('Please log in or sign up first to claim access.');
+          setTimeout(() => {
+            window.location.href = `/signup?plan=${billingCycle}&currency=${currency}`;
+          }, 800);
+          return;
+        }
+        throw new Error(data.error || 'Failed to activate access.');
+      }
+
+      setActivated(true);
+      toast.success('Premium Skill Network unlocked! Full access granted.');
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 700);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Activation error';
+      toast.error(msg);
+    } finally {
+      setActivating(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -45,13 +83,27 @@ export function UpgradeModal({
 
         <div className="text-center space-y-3 mb-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full am-badge-gold text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" /> Premium Skill Network
+            <Sparkles className="w-3.5 h-3.5" /> Premium Skill Network Access
           </div>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
             {title}
           </h2>
           <p className="text-sm text-gray-400 max-w-md mx-auto">
             {subtitle}
+          </p>
+        </div>
+
+        {/* Promotional Free Access Banner */}
+        <div className="p-4 rounded-xl bg-gradient-to-b from-amber-500/15 via-amber-500/10 to-transparent border border-amber-500/30 mb-6 text-center space-y-1.5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold uppercase tracking-wider">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Early Access Promotion • 100% Free
+          </div>
+          <div className="flex items-baseline justify-center gap-2.5 pt-1">
+            <span className="text-lg text-gray-500 line-through font-medium">{regularPrice} {cycleLabel}</span>
+            <span className="text-3xl md:text-4xl font-black text-amber-300 tracking-tight">$0 Free Access</span>
+          </div>
+          <p className="text-xs text-emerald-400 font-medium">
+            Zero payment details or credit cards required. Instant access granted on click.
           </p>
         </div>
 
@@ -77,14 +129,14 @@ export function UpgradeModal({
                   : 'text-gray-400 hover:text-white'
               }`}
             >
-              Annual <span className="text-[10px] bg-black/20 text-white px-1.5 py-0.5 rounded font-bold">Best Value</span>
+              Annual <span className="text-[10px] bg-black/20 text-white px-1.5 py-0.5 rounded font-bold">Recommended</span>
             </button>
           </div>
 
           {/* Currency Selector */}
           <div className="flex items-center gap-1 text-xs">
             <Globe className="w-3.5 h-3.5 text-gray-400 ml-1" />
-            <span className="text-gray-400 mr-1">Currency:</span>
+            <span className="text-gray-400 mr-1">Region:</span>
             {(['EUR', 'USD', 'INR'] as SupportedCurrency[]).map((cur) => (
               <button
                 key={cur}
@@ -99,15 +151,6 @@ export function UpgradeModal({
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Pricing Display */}
-        <div className="p-4 rounded-xl bg-gradient-to-b from-amber-500/10 to-transparent border border-amber-500/20 mb-6 text-center">
-          <div className="flex items-baseline justify-center gap-1">
-            <span className="text-4xl font-extrabold text-white tracking-tight">{price}</span>
-            <span className="text-sm font-medium text-gray-400">{cycleLabel}</span>
-          </div>
-          <p className="text-xs text-amber-300/80 mt-1">{pricing.taxNote}</p>
         </div>
 
         {/* Exclusive Benefits List */}
@@ -130,16 +173,28 @@ export function UpgradeModal({
 
         {/* CTA Buttons */}
         <div className="space-y-3">
-          <Link
-            href={`/dashboard/upgrade?cycle=${billingCycle}&currency=${currency}`}
-            onClick={onClose}
-            className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl am-btn-primary text-sm font-semibold shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.01]"
+          <button
+            onClick={handleInstantActivate}
+            disabled={activating || activated}
+            className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl am-btn-primary text-sm font-bold shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.01] disabled:opacity-60 cursor-pointer"
           >
-            Become a Premium Member <ArrowRight className="w-4 h-4" />
-          </Link>
+            {activating ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Unlocking Premium Privileges...
+              </>
+            ) : activated ? (
+              <>
+                <CheckCircle2 className="w-4 h-4 text-black" /> Premium Access Granted!
+              </>
+            ) : (
+              <>
+                <Zap className="w-4 h-4 fill-black text-black" /> Get Instant Premium Access (Free)
+              </>
+            )}
+          </button>
 
           <p className="text-[11px] text-center text-gray-500">
-            Secure international checkout via Stripe & Razorpay. Cancel anytime from Billing Settings.
+            No credit card, Stripe, or payment details required. Immediate full access to all features.
           </p>
         </div>
       </div>
