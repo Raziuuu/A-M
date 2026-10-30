@@ -325,3 +325,64 @@ export interface PlanPricing {
   formattedAnnual: string;
   taxNote: string;
 }
+
+// ==========================================================
+// EXPERTISE TAXONOMY & CATALOG TYPES (Step 7 Onboarding)
+// ==========================================================
+
+export interface Niche {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  status: 'active' | 'inactive' | 'archived';
+  sort_order: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Skill {
+  id: string;
+  niche_id: string;
+  slug: string;
+  name: string;
+  description?: string;
+  subcategory?: string;
+  status: 'active' | 'inactive' | 'archived';
+  sort_order: number;
+  aliases?: string[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SkillAlias {
+  id: string;
+  skill_id: string;
+  alias: string;
+  locale: string;
+}
+
+export type SkillLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+
+export interface ProfileSkill {
+  id: string;
+  profile_id: string;
+  skill_id: string;
+  level?: SkillLevel;
+  years_experience?: number;
+  note?: string;
+  created_at?: string;
+  updated_at?: string;
+  skill?: Skill;
+}
+
+export interface ExpertiseSuggestion {
+  id: string;
+  profile_id: string;
+  proposed_name: string;
+  niche_id?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  reviewed_at?: string;
+  created_at: string;
+}
+

@@ -21,7 +21,7 @@ export async function GET(req: Request) {
         .from('skill_network_members')
         .select(`
           *,
-          profile:profiles(*)
+          profile:profiles!user_id(*)
         `)
         .order('created_at', { ascending: false });
 

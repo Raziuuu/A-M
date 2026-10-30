@@ -1,51 +1,83 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { platformStore } from '@/lib/store';
+import { requirePremium } from '@/lib/auth';
+
+const SendMessageSchema = z.object({
+  recipientId: z.string().min(1, 'Recipient ID is required'),
+  content: z.string().min(1, 'Message content cannot be empty').max(2000, 'Message cannot exceed 2000 characters'),
+});
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const threadId = searchParams.get('threadId');
+  try {
+    // 1. Enforce premium membership server-side
+    const authCheck = await requirePremium(req);
+    if ('response' in authCheck) {
+      return authCheck.response;
+    }
+    const currentUser = authCheck.user;
 
-  const currentUser = platformStore.getCurrentUser();
-  if (!currentUser) {
-    return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+    const { searchParams } = new URL(req.url);
+    const threadId = searchParams.get('threadId');
+
+    if (threadId) {
+      // IDOR Protection: Verify caller is an active participant in this specific thread
+      const userThreads = platformStore.getThreads(currentUser.id);
+      const isParticipant = userThreads.some(t => t.id === threadId && t.participant_ids.includes(currentUser.id));
+
+      if (!isParticipant && currentUser.role !== 'admin' && currentUser.role !== 'ceo') {
+        return NextResponse.json(
+          { error: 'Forbidden. You do not have access to this conversation.' },
+          { status: 403 }
+        );
+      }
+
+      const messages = platformStore.getThreadMessages(threadId);
+      return NextResponse.json({ messages });
+    }
+
+    // Only return threads for the authenticated user
+    const threads = platformStore.getThreads(currentUser.id);
+    return NextResponse.json({ threads });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to retrieve messages';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  // Gate: Free users cannot access messaging
-  if (currentUser.role === 'free_user' && currentUser.membership_status !== 'active') {
-    return NextResponse.json({ error: 'Messaging is available exclusively to Skill Network members.' }, { status: 403 });
-  }
-
-  if (threadId) {
-    const messages = platformStore.getThreadMessages(threadId);
-    return NextResponse.json({ messages });
-  }
-
-  const threads = platformStore.getThreads(currentUser.id);
-  return NextResponse.json({ threads });
 }
 
 export async function POST(req: Request) {
   try {
-    const { recipientId, content } = await req.json();
+    // 1. Enforce premium membership server-side
+    const authCheck = await requirePremium(req);
+    if ('response' in authCheck) {
+      return authCheck.response;
+    }
+    const currentUser = authCheck.user;
 
-    if (!recipientId || !content) {
-      return NextResponse.json({ error: 'Recipient and content are required.' }, { status: 400 });
+    // 2. Validate input schema
+    const rawBody = await req.json();
+    const parseResult = SendMessageSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: parseResult.error.errors[0].message },
+        { status: 400 }
+      );
     }
 
-    const currentUser = platformStore.getCurrentUser();
-    if (!currentUser) {
-      return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+    const { recipientId, content } = parseResult.data;
+
+    // Prevent sending message to oneself
+    if (recipientId === currentUser.id) {
+      return NextResponse.json(
+        { error: 'Cannot send messages to yourself.' },
+        { status: 400 }
+      );
     }
 
-    // Role gate
-    if (currentUser.role === 'free_user' && currentUser.membership_status !== 'active') {
-      return NextResponse.json({ error: 'Messaging is available exclusively to Skill Network members.' }, { status: 403 });
-    }
-
-    const message = platformStore.sendMessage(currentUser.id, recipientId, content);
-
+    const message = platformStore.sendMessage(currentUser.id, recipientId, content.trim());
     return NextResponse.json({ success: true, message });
-  } catch {
-    return NextResponse.json({ error: 'Failed to send message.' }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to send message';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
