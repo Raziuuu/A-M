@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -55,7 +55,7 @@ const PRESET_AVATARS = [
   'https://api.dicebear.com/7.x/bottts/svg?seed=AM_Producer',
 ];
 
-export default function OnboardingPage() {
+function OnboardingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -1684,3 +1684,19 @@ export default function OnboardingPage() {
     </div>
   );
 }
+
+export default function OnboardingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#07090E] flex flex-col items-center justify-center text-center p-6">
+          <div className="w-10 h-10 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-400 text-sm mt-4 font-mono">Loading onboarding wizard...</p>
+        </div>
+      }
+    >
+      <OnboardingContent />
+    </Suspense>
+  );
+}
+
