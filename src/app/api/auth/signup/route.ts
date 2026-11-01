@@ -137,99 +137,125 @@ export async function POST(req: Request) {
         });
 
         if (authError) {
-          if (authError.message.includes('already registered')) {
-            return NextResponse.json(
-              { error: 'An account with that email or username already exists.' },
-              { status: 409 }
+          if (authError.message.toLowerCase().includes('already registered') || authError.message.toLowerCase().includes('already exists')) {
+            const { data: listData } = await supabase.auth.admin.listUsers({ page: 1, perPage: 100 });
+            const existingAuthUser = listData?.users?.find(
+              u => u.email?.toLowerCase() === data.email.trim().toLowerCase()
             );
+
+            if (existingAuthUser) {
+              // User exists in auth but may not have profile; update password & metadata
+              await supabase.auth.admin.updateUserById(existingAuthUser.id, {
+                password: data.password,
+                email_confirm: true,
+                user_metadata: {
+                  full_name: data.full_name,
+                  username: data.username,
+                  account_type: data.account_type,
+                },
+              });
+              userId = existingAuthUser.id;
+            } else {
+              return NextResponse.json(
+                { error: 'An account with that email or username already exists.' },
+                { status: 409 }
+              );
+            }
+          } else {
+            return NextResponse.json({ error: authError.message }, { status: 400 });
           }
-          console.warn('Supabase Auth createUser warning:', authError.message);
         } else if (authData.user) {
           userId = authData.user.id;
+        }
 
-          // 2. Insert Profile record
-          const { error: profileError } = await supabase.from('profiles').upsert({
-            id: authData.user.id,
-            email: data.email.trim().toLowerCase(),
-            full_name: data.full_name,
-            username: data.username.trim().toLowerCase(),
-            avatar_url: avatarUrl,
-            country_code: country.code,
-            country_name: country.name,
-            city: data.city || country.name,
-            timezone: data.timezone || country.timezone,
-            locale: country.locale,
-            profession: data.profession,
-            bio: bioText,
-            website: data.website || null,
-            linkedin: data.linkedin || null,
-            github: data.github || null,
-            role: 'free_user', // FORCED: Cannot be manipulated
-            membership_status: 'active',
-            membership_tier: 'free',
-            cancel_at_period_end: false,
+        // 2. Insert Profile record in Supabase
+        const { error: profileError } = await supabase.from('profiles').upsert({
+          id: userId,
+          email: data.email.trim().toLowerCase(),
+          full_name: data.full_name,
+          username: data.username.trim().toLowerCase(),
+          avatar_url: avatarUrl,
+          country_code: country.code,
+          country_name: country.name,
+          city: data.city || country.name,
+          timezone: data.timezone || country.timezone,
+          locale: country.locale,
+          profession: data.profession,
+          bio: bioText,
+          website: data.website || null,
+          linkedin: data.linkedin || null,
+          github: data.github || null,
+          role: 'premium_member',
+          membership_status: 'active',
+          membership_tier: 'annual',
+          cancel_at_period_end: false,
+          updated_at: new Date().toISOString(),
+        });
+
+        if (profileError) {
+          console.error('Supabase profile creation error:', profileError);
+        }
+
+        // 3. Resolve skill names for Skill Network directory
+        const validSkillMap = new Map<string, string>();
+        V1_SKILLS.forEach(s => validSkillMap.set(s.id, s.name));
+        const skillNames = data.selected_skills
+          .map(s => validSkillMap.get(s.skill_id))
+          .filter((n): n is string => Boolean(n));
+
+        // 4. Create Skill Network Member Profile
+        const { error: memberError } = await supabase.from('skill_network_members').upsert({
+          user_id: userId,
+          title: data.profession,
+          industry: data.account_type,
+          experience_years: data.experience_years,
+          hourly_rate: data.hourly_rate,
+          currency: data.currency,
+          availability: data.availability,
+          skills: skillNames,
+          areas_of_expertise: [...data.goals, ...data.interests],
+          is_active: true,
+          is_approved: false,
+          verification_status: 'pending',
+          updated_at: new Date().toISOString(),
+        });
+
+        if (memberError) {
+          console.error('Supabase skill_network_members creation error:', memberError);
+        }
+
+        // 5. Insert Step 7 Standardized Skills relationally into profile_skills
+        if (data.selected_skills.length > 0) {
+          const profileSkillRows = data.selected_skills.map(s => ({
+            profile_id: userId,
+            skill_id: s.skill_id,
+            level: s.level || 'intermediate',
+            years_experience: s.years_experience || 2,
+            note: s.note || '',
             updated_at: new Date().toISOString(),
-          });
+          }));
 
-          if (profileError) {
-            console.error('Supabase profile creation error:', profileError);
+          const { error: skillsError } = await supabase
+            .from('profile_skills')
+            .upsert(profileSkillRows, { onConflict: 'profile_id,skill_id' });
+
+          if (skillsError) {
+            console.error('Supabase profile_skills error:', skillsError.message);
           }
+        }
 
-          // 3. Resolve skill names for Skill Network directory
-          const validSkillMap = new Map<string, string>();
-          V1_SKILLS.forEach(s => validSkillMap.set(s.id, s.name));
-          const skillNames = data.selected_skills
-            .map(s => validSkillMap.get(s.skill_id))
-            .filter((n): n is string => Boolean(n));
-
-          // 4. Create Skill Network Member Profile
-          const { error: memberError } = await supabase.from('skill_network_members').upsert({
-            user_id: authData.user.id,
-            title: data.profession,
-            industry: data.account_type,
-            experience_years: data.experience_years,
-            hourly_rate: data.hourly_rate,
-            currency: data.currency,
-            availability: data.availability,
-            skills: skillNames,
-            areas_of_expertise: [...data.goals, ...data.interests],
-            is_active: true,
-            is_approved: false, // Standard verification pipeline
-            verification_status: 'pending',
-            updated_at: new Date().toISOString(),
-          });
-
-          if (memberError) {
-            console.error('Supabase skill_network_members creation error:', memberError);
-          }
-
-          // 5. Insert Step 7 Standardized Skills relationally into profile_skills
-          if (data.selected_skills.length > 0) {
-            const profileSkillRows = data.selected_skills.map(s => ({
-              profile_id: authData.user.id,
-              skill_id: s.skill_id,
-              level: s.level || 'intermediate',
-              years_experience: s.years_experience || 2,
-              note: s.note || '',
-              updated_at: new Date().toISOString(),
-            }));
-
-            const { error: skillsError } = await supabase
-              .from('profile_skills')
-              .upsert(profileSkillRows, { onConflict: 'profile_id,skill_id' });
-
-            if (skillsError) {
-              console.error('Supabase profile_skills error:', skillsError.message);
-            }
-          }
-
-          // 6. Sign in user to retrieve session access token
+        // 6. Sign in user to retrieve live session access token
+        try {
           const { data: loginData } = await supabase.auth.signInWithPassword({
             email: data.email.trim().toLowerCase(),
             password: data.password,
           });
 
-          sessionToken = loginData.session?.access_token || `usr_${userId}`;
+          if (loginData?.session?.access_token) {
+            sessionToken = loginData.session.access_token;
+          }
+        } catch {
+          // ignore
         }
       } catch (sbError) {
         console.error('Supabase signup dispatch error:', sbError);
